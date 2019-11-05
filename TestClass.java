@@ -4,7 +4,7 @@ public class TestClass {
 	public ArrayList<Integer> list;
 	public TestClass(){
 		this.list= new ArrayList<>();
-		
+		System.out.print("Test");
 	}
 
 }
