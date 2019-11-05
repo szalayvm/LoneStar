@@ -1,0 +1,24 @@
+Houston
+City 29.7604 95.3698
+Austin
+City 30.2672 97.7431
+Galveston
+City 29.3013 94.7977
+San Antonio
+City 29.4241 98.4936
+Dallas
+City 32.7767 96.7970
+El Paso
+City 31.7619 106.4850
+Waco
+City 31.5493 97.1467
+Corpus Christi
+City  27.8006 97.3964
+Fort Worth
+City  32.7555 97.3308
+San Angelo
+City  31.4638 100.4370
+Laredo
+City  27.5036 99.5076
+Victoria
+City 28.8053 97.0036

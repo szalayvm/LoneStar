@@ -1,0 +1,84 @@
+Hwy290
+Houston
+Austin
+Highway 165
+Hwy45
+Houston
+Galveston
+Highway 51.1
+Hwy10
+San Antonio
+Houston
+Highway 197
+SR35
+Galveston
+Corpus Christi
+MainRoad 225
+Hwy37
+Corpus Christi
+San Antonio
+Highway 143
+Hwy59
+Laredo
+Corpus Christi
+Highway 151
+Hwy35
+San Antonio
+Laredo
+Highway 157
+Hwy35
+Austin
+San Antonio
+Highway 79.5
+Hwy35
+Waco
+Austin
+Highway 102
+Hwy35
+Waco
+Fort Worth
+Highway 90.7
+Hwy35
+Waco
+Dallas
+Highway 94.9
+Hwy30
+Fort Worth
+Dallas
+Highway 32.5
+Hwy10
+Austin
+El Paso
+Highway 577
+Hwy59
+Houston
+Victoria
+Highway 125
+Hwy77
+Victoria
+Corpus Christi
+Highway 85.1
+Hwy290
+Houston
+San Angelo
+Highway 365
+Hwy83
+San Antonio
+San Angelo
+Highway 212
+Hwy20
+Fort Worth
+San Angelo
+Highway 227
+Hwy71
+Austin
+San Angelo
+Highway 205
+Hwy10
+El Paso
+San Angelo
+Highway 404
+Hwy55
+Laredo
+San Angelo
+Highway 321
