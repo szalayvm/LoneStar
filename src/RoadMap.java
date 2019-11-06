@@ -81,6 +81,46 @@ public class RoadMap<T extends Comparable<? super T>> {
 		
 		return matches;
 	}
+	public ArrayList<Node> findMinTime(Node start, Node end) {
+		
+		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
+//		ComparableNode first =  new ComparableNode(start, (int) Math.round(this.getStraightLineDistance(start, end)));
+		ComparableNode first =  new ComparableNode(start, 0);
+		ArrayList<Node> connected = start.getConnectedCities();
+		for(int i = 0; i < connected.size(); i++) {
+			
+			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).time)));
+		}
+
+		System.out.println("Initialized");
+		System.out.println(queue);
+		
+
+		
+		int index = 1;
+		
+		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
+
+			connected = queue.peek().currentPath.get(index).getConnectedCities();
+			
+			ComparableNode saveCompare = queue.poll();
+			Node saveNode = saveCompare.currentPath.get(index);
+			for(int i = 0; i < connected.size(); i++) {
+				if(!saveCompare.currentPath.contains(connected.get(i))){
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) Math.round(saveNode.connectedRoads.get(i).time));
+					queue.add(addToPath);
+				}
+			}
+			System.out.println("After some paths:");
+			System.out.println(queue);
+			
+			index = queue.peek().currentPath.size() - 1;
+			
+		}
+		
+		
+		return queue.peek().currentPath;
+	}
 		
 	public ArrayList<Node> findMinDistance(Node start, Node end) {
 		
@@ -96,13 +136,12 @@ public class RoadMap<T extends Comparable<? super T>> {
 		System.out.println("Initialized");
 		System.out.println(queue);
 		
-//		System.out.println("head:");
-//		System.out.println(queue.peek().distance);
+
 		
 		int index = 1;
 		
 		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
-//			System.out.println(queue.peek().currentPath.get(index).name + " does not equal" + end.name);
+
 			connected = queue.peek().currentPath.get(index).getConnectedCities();
 			
 			ComparableNode saveCompare = queue.poll();
@@ -142,6 +181,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private NodeType type;
 		private double latitude;
 		private double longitude;
+		
 		
 		private Color color;
 		
@@ -214,33 +254,34 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private class ComparableNode implements Comparable<ComparableNode> {
 		ArrayList<Node> currentPath;
-		Integer distance;
+		Integer cost;
 		
-		public ComparableNode(Node node, Integer distance) {
+		public ComparableNode(Node node, Integer cost) {
 			this.currentPath = new ArrayList<Node>();
 			currentPath.add(node);
-			this.distance = distance;
-		}
-
-		public ComparableNode(ArrayList<Node> list, Integer distance) {
-			this.currentPath = list;
-			this.distance = distance;
+			this.cost = cost;
 		}
 		
-		public ComparableNode createNewBranch(Node newCity, Integer distance) {
+
+		public ComparableNode(ArrayList<Node> list, Integer cost) {
+			this.currentPath = list;
+			this.cost = cost;
+		}
+		
+		public ComparableNode createNewBranch(Node newCity, Integer cost) {
 			ArrayList<Node> newList = new ArrayList<Node>();
 			newList.addAll(this.currentPath);
 			newList.add(newCity);
-			Integer newDistance = this.distance + distance;
+			Integer newDistance = this.cost + cost;
 			return new ComparableNode(newList, newDistance);
 		}
 		
 			
 		@Override
 		public int compareTo(ComparableNode n) {
-	        if(this.distance > n.distance) {
+	        if(this.cost > n.cost) {
 	            return 1;
-	        } else if (this.distance < n.distance) {
+	        } else if (this.cost < n.cost) {
 	            return -1;
 	        } else {
 	            return 0;
