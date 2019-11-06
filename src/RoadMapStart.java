@@ -10,6 +10,7 @@ public class RoadMapStart {
 		
 		getLocationsFromFile(b);
 		getRoadsFromFile(b);
+		GUIMain.constructGUI();
 		
 //		for(Object c: b.referenceTable.keySet()) {
 //			RoadMap.Node n = b.getNodeFromString(c.toString());

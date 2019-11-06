@@ -109,8 +109,6 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private double latitude;
 		private double longitude;
 		
-		private double estimatedCost;
-		
 		public Node(String name, NodeType type, double latitude, double longitude) {
 			this.connectedRoads = new ArrayList<Edge>();
 			
