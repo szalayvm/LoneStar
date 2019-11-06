@@ -11,10 +11,16 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public Hashtable<String, Node> referenceTable;
 	public enum NodeType {CITY, LANDMARK, OTHER};
 	public enum EdgeType {HIGHWAY, MAIN_ROAD, RURAL_ROAD, OTHER};
+	public Hashtable<EdgeType, Integer> speedLimits;
 	
 	public RoadMap() {
 		size = 0;
 		referenceTable = new Hashtable<String, Node>();
+		speedLimits = new Hashtable<EdgeType, Integer>();
+		speedLimits.put(EdgeType.HIGHWAY, 75);
+		speedLimits.put(EdgeType.MAIN_ROAD, 65);
+		speedLimits.put(EdgeType.RURAL_ROAD, 55);
+		speedLimits.put(EdgeType.OTHER, 45);
 	}
 	
 	public int getSize() {
@@ -179,6 +185,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private String name;
 		private EdgeType type;
 		private double distance;
+		private double time;
 		
 		public Edge(Node firstNode, Node secondNode, String name, EdgeType type, double distance) {
 			this.firstNode = firstNode;
@@ -190,6 +197,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			this.name = name;
 			this.type = type;
 			this.distance = distance;
+			this.time = this.distance / speedLimits.get(type); // Minutes
 		}
 		
 		private Node getOtherNode(Node node) {
