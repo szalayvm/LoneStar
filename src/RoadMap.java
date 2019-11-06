@@ -2,9 +2,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.TreeSet;
 
-import com.sun.glass.ui.CommonDialogs.Type;
 
 public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
@@ -79,6 +79,40 @@ public class RoadMap<T extends Comparable<? super T>> {
 		
 		return c*R;
 	}
+	
+	// Time method is the same, except it uses .time instead of .distance
+	public ArrayList<ArrayList<Node>> getNearestCitiesByDistance(Node startingCity, int distance, int choices) {
+		
+		ArrayList<ArrayList<Node>> selectedNodes = new ArrayList<ArrayList<Node>>(); // Jank
+		
+		for(int i = 0; i < choices; i++) {
+			
+			int currentLength =  0;
+			ArrayList<Node> visitedNodes = new ArrayList<Node>();
+			ArrayList<Node> path = new ArrayList<Node>();
+			Node currentNode = startingCity;
+			Random r = new Random();
+			
+			while(currentLength < distance) {
+				visitedNodes.add(currentNode);
+				int next = r.nextInt(currentNode.getConnectedRoads().size());
+				Node nextNode = currentNode.getConnectedRoads().get(next).getOtherNode(currentNode); // Jank
+				if(!visitedNodes.contains(nextNode)) {
+					currentLength += currentNode.getConnectedRoads().get(next).distance;
+					path.add(currentNode);
+					currentNode = nextNode;
+				}
+			}
+			if(!selectedNodes.contains(path)) {
+				selectedNodes.add(path);
+			} else {
+				i--;
+			}
+		}
+		
+		return selectedNodes;
+	}
+	
 	
 	public ArrayList<String> searchForCities(String input) {
 		ArrayList<String> matches = new ArrayList<String>();
@@ -174,7 +208,6 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private double latitude;
 		private double longitude;
 		
-		
 		private Color color;
 		
 		public String getName() { return name; }
@@ -232,10 +265,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 			this.name = name;
 			this.type = type;
 			this.distance = distance;
-			this.time = this.distance / speedLimits.get(type); // Minutes
+			this.time = this.distance / speedLimits.get(this.type); // Minutes
 		}
 		
-		private Node getOtherNode(Node node) {
+		public Node getOtherNode(Node node) {
 			if(firstNode.equals(node)) {
 				return secondNode;
 			}
