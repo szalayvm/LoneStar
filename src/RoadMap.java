@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
+import java.util.TreeSet;
+
+import com.sun.glass.ui.CommonDialogs.Type;
 
 public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
@@ -23,6 +26,22 @@ public class RoadMap<T extends Comparable<? super T>> {
 			referenceTable.get(s);
 		}
 		return a;
+	}
+	
+	public ArrayList<Edge> getAllEdges() {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		TreeSet<Edge> e = new TreeSet<Edge>();
+		
+		ArrayList<Node> a = new ArrayList<Node>();
+		for(String s : referenceTable.keySet()) {
+			referenceTable.get(s);
+		}
+		for(Node n : a) {
+			e.addAll(n.getConnectedRoads());
+		}
+		edges.addAll(e);
+		
+		return edges;
 	}
 	
 	public Node getNodeFromString(String key) throws NullPointerException {
@@ -116,6 +135,23 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private NodeType type;
 		private double latitude;
 		private double longitude;
+		
+		public String getName() {
+			return name;
+		}
+		
+		public NodeType getType() {
+			return type;
+		}
+		
+		public double getLatitude() {
+			return latitude;
+		}
+		
+		public double getLongitude() {
+			return longitude;
+		}
+		
 		
 		public Node(String name, NodeType type, double latitude, double longitude) {
 			this.connectedRoads = new ArrayList<Edge>();
