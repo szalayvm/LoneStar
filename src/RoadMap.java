@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
@@ -136,13 +137,14 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private double latitude;
 		private double longitude;
 		
+		private Color color;
+		
 		public String getName() { return name; }
 		public NodeType getType() { return type; }
-		
 		public double getLatitude() { return latitude; }
-		
 		public double getLongitude() { return longitude; }
-		
+		public Color getColor() { return color; }
+		public void setColor(Color color) { this.color = color; }
 		
 		public Node(String name, NodeType type, double latitude, double longitude) {
 			this.connectedRoads = new ArrayList<Edge>();
