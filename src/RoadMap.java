@@ -17,6 +17,14 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return size;
 	}
 	
+	public ArrayList<Node> getAllCities() {
+		ArrayList<Node> a = new ArrayList<Node>();
+		for(String s : referenceTable.keySet()) {
+			referenceTable.get(s);
+		}
+		return a;
+	}
+	
 	public Node getNodeFromString(String key) throws NullPointerException {
 		Node value = referenceTable.get(key);
 		if(value == null) {

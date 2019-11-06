@@ -6,11 +6,11 @@ import java.util.Scanner;
 public class RoadMapStart {
 	
 	public static void main(String[] args) throws IOException {
-		RoadMap b = new RoadMap();
+		RoadMap g = new RoadMap();
 		
-		getLocationsFromFile(b);
-		getRoadsFromFile(b);
-		GUIMain.constructGUI();
+		getLocationsFromFile(g);
+		getRoadsFromFile(g);
+		GUIMain.constructGUI(g);
 		
 //		for(Object c: b.referenceTable.keySet()) {
 //			RoadMap.Node n = b.getNodeFromString(c.toString());
@@ -19,7 +19,7 @@ public class RoadMapStart {
 //			System.out.println(n.getConnectedCities());
 //		}
 		System.out.println("Result:");
-		System.out.println(b.findMinDistance(b.getNodeFromString("Galveston"), b.getNodeFromString("Fort Worth")).toString());
+		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Fort Worth")).toString());
 		
 		
 		

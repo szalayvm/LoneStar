@@ -13,7 +13,7 @@ import javax.swing.border.Border;
 
 public class GUIMain {
 
-	public static void constructGUI() {
+	public static void constructGUI(RoadMap roadmap) {
 		int w = 800;
 		int h = 800;
 		JFrame frame = new JFrame("Trip Planner");
