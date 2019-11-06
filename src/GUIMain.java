@@ -22,6 +22,7 @@ public class GUIMain {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		MapVisualizer map = new MapVisualizer(roadmap);
+		
 
 		JLabel titleText = new JLabel("Lone Star Traversal");
 		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
@@ -104,15 +105,21 @@ public class GUIMain {
 		tab.addTab("Trip Planner", TPPanel);
 		tab.addTab("Shortest Route", SRPanel);
 		tab.addTab("City Search", searcher);
-
-		contentPane.add(titleText);
-		contentPane.add(tab);
-		contentPane.add(map);
+		
+		MapVisualizer.Window wind= map.draw();
+		wind.setLocation(w-200, h-200);
+		wind.repaint();
+		contentPane.add(wind);
+//		contentPane.add(titleText);
+//		contentPane.add(tab);
+		
 
 		frame.setContentPane(contentPane);
 		frame.setSize(w, h);
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
+
+		
 
 	}
 }
