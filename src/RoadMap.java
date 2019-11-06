@@ -136,21 +136,12 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private double latitude;
 		private double longitude;
 		
-		public String getName() {
-			return name;
-		}
+		public String getName() { return name; }
+		public NodeType getType() { return type; }
 		
-		public NodeType getType() {
-			return type;
-		}
+		public double getLatitude() { return latitude; }
 		
-		public double getLatitude() {
-			return latitude;
-		}
-		
-		public double getLongitude() {
-			return longitude;
-		}
+		public double getLongitude() { return longitude; }
 		
 		
 		public Node(String name, NodeType type, double latitude, double longitude) {
