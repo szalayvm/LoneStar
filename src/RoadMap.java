@@ -13,6 +13,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public enum EdgeType {HIGHWAY, MAIN_ROAD, RURAL_ROAD, OTHER};
 	public Hashtable<EdgeType, Integer> speedLimits;
 	
+	
 	public RoadMap() {
 		size = 0;
 		referenceTable = new Hashtable<String, Node>();
@@ -23,9 +24,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 		speedLimits.put(EdgeType.OTHER, 45);
 	}
 	
+	
 	public int getSize() {
 		return size;
 	}
+	
 	
 	public ArrayList<Node> getAllCities() {
 		ArrayList<Node> a = new ArrayList<Node>();
@@ -34,6 +37,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 		return a;
 	}
+
 	
 	public ArrayList<Edge> getAllEdges() {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -51,6 +55,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return edges;
 	}
 	
+	
 	public Node getNodeFromString(String key) throws NullPointerException {
 		Node value = referenceTable.get(key);
 		if(value == null) {
@@ -59,6 +64,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 		return value;
 	}
+	
 	
 	public double getStraightLineDistance(Node node1, Node node2) {
 		if(node1 == null | node2 == null) throw new NullPointerException();
@@ -86,21 +92,14 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public ArrayList<Node> findMinDistance(Node start, Node end) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-//		ComparableNode first =  new ComparableNode(start, (int) Math.round(this.getStraightLineDistance(start, end)));
 		ComparableNode first =  new ComparableNode(start, 0, (int) getStraightLineDistance(start, end));
 		ArrayList<Node> connected = start.getConnectedCities();
 		for(int i = 0; i < connected.size(); i++) {
 			
 			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).distance), (int) this.getStraightLineDistance(start.getConnectedCities().get(i), end)));
 		}
-
-		System.out.println("Initialized");
-		System.out.println(queue);
-		
-
 		
 		int index = 1;
-		
 		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
 
 			connected = queue.peek().currentPath.get(index).getConnectedCities();
@@ -113,13 +112,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 					queue.add(addToPath);
 				}
 			}
-			System.out.println("After some paths:");
-			System.out.println(queue);
 			
 			index = queue.peek().currentPath.size() - 1;
 			
 		}
-		
 		
 		return queue.peek().currentPath;
 	}
@@ -127,21 +123,14 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public ArrayList<Node> findMinTime(Node start, Node end) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-//		ComparableNode first =  new ComparableNode(start, (int) Math.round(this.getStraightLineDistance(start, end)));
 		ComparableNode first =  new ComparableNode(start, 0, (int) getStraightLineDistance(start, end));
 		ArrayList<Node> connected = start.getConnectedCities();
 		for(int i = 0; i < connected.size(); i++) {
 			
 			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).time), (int) (this.getStraightLineDistance(start.getConnectedCities().get(i), end) / 75.0 * 60.0)));
 		}
-
-		System.out.println("Initialized");
-		System.out.println(queue);
-		
-
-		
+	
 		int index = 1;
-		
 		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
 
 			connected = queue.peek().currentPath.get(index).getConnectedCities();
@@ -161,14 +150,15 @@ public class RoadMap<T extends Comparable<? super T>> {
 			
 		}
 		
-		
 		return queue.peek().currentPath;
 	}
+	
 	
 	public boolean addNode(String name, NodeType type, double latitude, double longitude) {
 		referenceTable.put(name, new Node(name, type, latitude, longitude));
 		return true;
 	}
+	
 	
 	public boolean addEdge(Node firstNode, Node secondNode, String name, EdgeType type, double distance) {
 		new Edge(firstNode, secondNode, name, type, distance);
@@ -222,6 +212,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		
 	}
 	
+	
 	public class Edge {
 		private Node firstNode;
 		private Node secondNode;
@@ -255,6 +246,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			return name;
 		}
 	}
+	
 	
 	private class ComparableNode implements Comparable<ComparableNode> {
 		ArrayList<Node> currentPath;
