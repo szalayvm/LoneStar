@@ -124,6 +124,47 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return queue.peek().currentPath;
 	}
 	
+	public ArrayList<Node> findMinTime(Node start, Node end) {
+		
+		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
+//		ComparableNode first =  new ComparableNode(start, (int) Math.round(this.getStraightLineDistance(start, end)));
+		ComparableNode first =  new ComparableNode(start, 0, (int) getStraightLineDistance(start, end));
+		ArrayList<Node> connected = start.getConnectedCities();
+		for(int i = 0; i < connected.size(); i++) {
+			
+			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).time), (int) (this.getStraightLineDistance(start.getConnectedCities().get(i), end) / 75.0 * 60.0)));
+		}
+
+		System.out.println("Initialized");
+		System.out.println(queue);
+		
+
+		
+		int index = 1;
+		
+		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
+
+			connected = queue.peek().currentPath.get(index).getConnectedCities();
+			
+			ComparableNode saveCompare = queue.poll();
+			Node saveNode = saveCompare.currentPath.get(index);
+			for(int i = 0; i < connected.size(); i++) {
+				if(!saveCompare.currentPath.contains(connected.get(i))){
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) Math.round(saveNode.connectedRoads.get(i).time),(int) (this.getStraightLineDistance(saveNode.getConnectedCities().get(i), end)/ 75.0 * 60.0));
+					queue.add(addToPath);
+				}
+			}
+			System.out.println("After some paths:");
+			System.out.println(queue);
+			
+			index = queue.peek().currentPath.size() - 1;
+			
+		}
+		
+		
+		return queue.peek().currentPath;
+	}
+	
 	public boolean addNode(String name, NodeType type, double latitude, double longitude) {
 		referenceTable.put(name, new Node(name, type, latitude, longitude));
 		return true;
@@ -160,6 +201,8 @@ public class RoadMap<T extends Comparable<? super T>> {
 			this.type = type;
 			this.latitude = latitude;
 			this.longitude = longitude;
+			
+			this.color = Color.BLACK;
 			size++;
 		}
 		

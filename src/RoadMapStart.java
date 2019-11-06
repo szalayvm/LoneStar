@@ -19,7 +19,7 @@ public class RoadMapStart {
 //			System.out.println(n.getConnectedCities());
 //		}
 		System.out.println("Result:");
-		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Fort Worth")).toString());
+		System.out.println(g.findMinTime(g.getNodeFromString("Galveston"), g.getNodeFromString("Corpus Christi")).toString());
 		
 		
 		
