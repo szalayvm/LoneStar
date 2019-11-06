@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -52,12 +54,10 @@ public class GUIMain {
 		JTextField searcher = new JTextField("Enter in a character and see which city you want!");
 
 		JButton SR = new JButton("Go!");
-		// SR.addActionListener(new ActionListener());
-		//
-		// public void actionPerformed(ActionEvent e)
-		// {
-		//
-		// }
+		SR.addActionListener(new ButtonListener());
+		
+		
+		
 
 		TextFieldListener sL = new TextFieldListener(start);
 		TextFieldListener eL = new TextFieldListener(end);
@@ -114,5 +114,15 @@ public class GUIMain {
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
 
+	}
+}
+
+class ButtonListener implements ActionListener
+{
+	ButtonListener(){
+	}
+	public void actionPerformed (ActionEvent e)
+	{
+		System.out.println("Button pressed");
 	}
 }
