@@ -20,6 +20,10 @@ public class RoadMapStart {
 		System.out.println("Result:");
 		System.out.println(b.findMinDistance(b.getNodeFromString("Galveston"), b.getNodeFromString("Fort Worth")).toString());
 		
+		
+		
+		
+		
 	}
 
 	private static void getLocationsFromFile(RoadMap b) {

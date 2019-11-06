@@ -11,7 +11,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-public class Main {
+public class GUIMain {
 
 	public static void main(String args[]) {
 		int w = 800;
