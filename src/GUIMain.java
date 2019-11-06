@@ -19,6 +19,8 @@ public class GUIMain {
 		JFrame frame = new JFrame("Trip Planner");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		MapVisualizer map = new MapVisualizer(roadmap);
+
 		JLabel titleText = new JLabel("Lone Star Traversal");
 		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
 		titleText.setSize(w, h);
@@ -35,7 +37,7 @@ public class GUIMain {
 		tab.setSize(w, 500);
 		tab.setVisible(true);
 		tab.setLocation(0, 100);
-		
+
 		Border border = BorderFactory.createLineBorder(Color.black, 5);
 
 		JLabel startlabel = new JLabel("Starting City: ");
@@ -48,14 +50,14 @@ public class GUIMain {
 		JTextField end = new JTextField("Enter in your ending city!");
 		end.setBackground(Color.green);
 		JTextField searcher = new JTextField("Enter in a character and see which city you want!");
-		
+
 		JButton SR = new JButton("Go!");
-//		SR.addActionListener(new ActionListener());
-//		
-//		public void actionPerformed(ActionEvent e)
-//		{
-//			
-//		}
+		// SR.addActionListener(new ActionListener());
+		//
+		// public void actionPerformed(ActionEvent e)
+		// {
+		//
+		// }
 
 		TextFieldListener sL = new TextFieldListener(start);
 		TextFieldListener eL = new TextFieldListener(end);
@@ -64,7 +66,7 @@ public class GUIMain {
 		start.addActionListener(sL);
 		end.addActionListener(eL);
 		searcher.addActionListener(searchL);
-		
+
 		JPanel SRPanel = new JPanel();
 		SRPanel.setOpaque(true);
 		SRPanel.setBackground(Color.white);
@@ -84,7 +86,7 @@ public class GUIMain {
 		JTextField distance = new JTextField("0");
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
-		
+
 		JPanel TPPanel = new JPanel();
 		TPPanel.setOpaque(true);
 		TPPanel.setBackground(Color.white);
@@ -98,15 +100,14 @@ public class GUIMain {
 		TPPanel.add(distance);
 		TPPanel.add(timeButton);
 		TPPanel.add(distanceButton);
-		
-		
-		
+
 		tab.addTab("Trip Planner", TPPanel);
 		tab.addTab("Shortest Route", SRPanel);
 		tab.addTab("City Search", searcher);
 
 		contentPane.add(titleText);
 		contentPane.add(tab);
+		contentPane.add(map);
 
 		frame.setContentPane(contentPane);
 		frame.setSize(w, h);
