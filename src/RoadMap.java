@@ -67,7 +67,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public Node getNodeFromString(String key) throws NullPointerException {
 		Node value = referenceTable.get(key);
 		if(value == null) {
-			System.out.println("City " + key + "does not exist! Are you sure you spelled it right?");
+			System.out.println("City " + key + " does not exist! Are you sure you spelled it right?");
 			throw new NullPointerException();
 		}
 		return value;
@@ -101,11 +101,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-		ComparableNode first =  new ComparableNode(start, 0, (int) h.heuristic(start, end));
+		ComparableNode first =  new ComparableNode(start, 0, h.heuristic(start, end));
 		ArrayList<Node> connected = start.getConnectedCities();
-		for(int i = 0; i < connected.size(); i++) {
-			
-			queue.add(first.createNewBranch(connected.get(i), (int) w.weight(start.connectedRoads.get(i)), (int) h.heuristic(start.getConnectedCities().get(i), end)));
+		for(int i = 0; i < connected.size(); i++) {	
+			queue.add(first.createNewBranch(connected.get(i), w.weight(start.connectedRoads.get(i)), h.heuristic(start.getConnectedCities().get(i), end)));
 		}
 		
 		int index = 1;
@@ -117,7 +116,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			Node saveNode = saveCompare.currentPath.get(index);
 			for(int i = 0; i < connected.size(); i++) {
 				if(!saveCompare.currentPath.contains(connected.get(i))){
-					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) w.weight(saveNode.connectedRoads.get(i)), (int) h.heuristic(saveNode.getConnectedCities().get(i), end));
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), w.weight(saveNode.connectedRoads.get(i)), h.heuristic(saveNode.getConnectedCities().get(i), end));
 					queue.add(addToPath);
 				}
 			}
@@ -164,36 +163,36 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return selectedNodes;
 	}
 	
-	private abstract class LambdaW { public abstract double weight(Edge e); }
+	private abstract class LambdaW { public abstract int weight(Edge e); }
 	
 	private class WeightDistance extends LambdaW { 
-		public double weight(Edge e) { return e.distance; } 
+		public int weight(Edge e) { return (int) e.distance; } 
 	}
 	private class WeightTime extends LambdaW { 
-		public double weight(Edge e) { return e.time; } 
+		public int weight(Edge e) { return (int) e.time; } 
 	}
 		
-	private abstract class LambdaH { public abstract double heuristic(Node node1, Node node2); } // Jank
+	private abstract class LambdaH { public abstract int heuristic(Node node1, Node node2); } // Jank
 	
 	private class HeuristicDistance extends LambdaH {
-		public double heuristic(Node node1, Node node2) {
+		public int heuristic(Node node1, Node node2) {
 			if(node1 == null | node2 == null) throw new NullPointerException();
 
-			double lat1 = (Math.PI/ 180) * (node1.latitude); // Convert to radians
-			double lat2 = (Math.PI/ 180) * (node2.latitude);
-			double long1 = (Math.PI/ 180) * (node1.longitude);
-			double long2 = (Math.PI/ 180) * (node2.longitude);
+			double lat1 = (Math.PI / 180) * (node1.latitude); // Convert to radians
+			double lat2 = (Math.PI / 180) * (node2.latitude);
+			double long1 = (Math.PI / 180) * (node1.longitude);
+			double long2 = (Math.PI / 180) * (node2.longitude);
 			double a = Math.pow((Math.sin((lat2 - lat1)) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((long2 - long1) / 2) , 2);
 			double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			double R = 3959; // In miles
 			
-			return c*R;
+			return (int) (c*R);
 		}
 	}
 	
 	private class HeuristicTime extends LambdaH {
-		public double heuristic(Node node1, Node node2) {
-			return new HeuristicDistance().heuristic(node1, node2) * 60 / 75; // TURBO-JANK
+		public int heuristic(Node node1, Node node2) {
+			return new HeuristicDistance().heuristic(node1, node2) * 60 / 75; // TURBO-JANK (also convert to minutes)
 		}
 	}
 	
@@ -267,9 +266,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 		
 		public Node getOtherNode(Node node) {
-			if(firstNode.equals(node)) {
-				return secondNode;
-			}
+			if(firstNode.equals(node)) { return secondNode; }
 			return firstNode;
 		}
 		

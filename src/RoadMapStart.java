@@ -19,8 +19,8 @@ public class RoadMapStart {
 //			System.out.println(n.getConnectedCities());
 //		}
 		System.out.println("Result:");
-//		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Corpus Christi")));
-		System.out.println(g.getNearCitiesToDistance(g.getNodeFromString("Houston"), 400, 1));
+		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Corpus Christi")));
+//		System.out.println(g.getNearCitiesToDistance(g.getNodeFromString("Houston"), 400, 2));
 		
 		
 		
