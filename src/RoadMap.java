@@ -29,6 +29,16 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return size;
 	}
 	
+	public boolean addNode(String name, NodeType type, double latitude, double longitude) {
+		referenceTable.put(name, new Node(name, type, latitude, longitude));
+		return true;
+	}
+	
+	
+	public boolean addEdge(Node firstNode, Node secondNode, String name, EdgeType type, double distance) {
+		new Edge(firstNode, secondNode, name, type, distance);
+		return true;
+	}
 	
 	public ArrayList<Node> getAllCities() {
 		ArrayList<Node> a = new ArrayList<Node>();
@@ -38,7 +48,6 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return a;
 	}
 
-	
 	public ArrayList<Edge> getAllEdges() {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		TreeSet<Edge> e = new TreeSet<Edge>();
@@ -54,8 +63,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		
 		return edges;
 	}
-	
-	
+		
 	public Node getNodeFromString(String key) throws NullPointerException {
 		Node value = referenceTable.get(key);
 		if(value == null) {
@@ -65,25 +73,65 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return value;
 	}
 	
-	
-	public double getStraightLineDistance(Node node1, Node node2) {
-		if(node1 == null | node2 == null) throw new NullPointerException();
-
-		double lat1 = (Math.PI/ 180) * (node1.latitude); // Convert to radians
-		double lat2 = (Math.PI/ 180) * (node2.latitude);
-		double long1 = (Math.PI/ 180) * (node1.longitude);
-		double long2 = (Math.PI/ 180) * (node2.longitude);
-		double a = Math.pow((Math.sin((lat2 - lat1)) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((long2 - long1) / 2) , 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		double R = 3959; // In miles
+	public ArrayList<String> searchForCities(String input) {
+		ArrayList<String> matches = new ArrayList<String>();
 		
-		return c*R;
+		for(String s: referenceTable.keySet()) if(s.contains(input)) matches.add(s);
+		
+		return matches;
 	}
 	
-	// Time method is the same, except it uses .time instead of .distance
-	public ArrayList<ArrayList<Node>> getNearestCitiesByDistance(Node startingCity, int distance, int choices) {
+	public ArrayList<ArrayList<Node>> getNearCitiesToDistance(Node startingCity, int distance, int choices) {
+		return getNearCities(startingCity, distance, choices, new WeightDistance());
+	}
+	
+	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int distance, int choices) {
+		return getNearCities(startingCity, distance, choices, new WeightTime());
+	}
+	
+	public ArrayList<Node> findMinDistance(Node start, Node end) {
+		return AStar(start, end, new HeuristicDistance(), new WeightDistance());
+	}
+	
+	public ArrayList<Node> findMinTime(Node start, Node end) {
+		return AStar(start, end, new HeuristicTime(), new WeightTime());
+	}
+
 		
-		ArrayList<ArrayList<Node>> selectedNodes = new ArrayList<ArrayList<Node>>(); // Jank
+	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w) {
+		
+		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
+		ComparableNode first =  new ComparableNode(start, 0, (int) h.heuristic(start, end));
+		ArrayList<Node> connected = start.getConnectedCities();
+		for(int i = 0; i < connected.size(); i++) {
+			
+			queue.add(first.createNewBranch(connected.get(i), (int) w.weight(start.connectedRoads.get(i)), (int) h.heuristic(start.getConnectedCities().get(i), end)));
+		}
+		
+		int index = 1;
+		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
+
+			connected = queue.peek().currentPath.get(index).getConnectedCities();
+			
+			ComparableNode saveCompare = queue.poll();
+			Node saveNode = saveCompare.currentPath.get(index);
+			for(int i = 0; i < connected.size(); i++) {
+				if(!saveCompare.currentPath.contains(connected.get(i))){
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) w.weight(saveNode.connectedRoads.get(i)), (int) h.heuristic(saveNode.getConnectedCities().get(i), end));
+					queue.add(addToPath);
+				}
+			}
+			
+			index = queue.peek().currentPath.size() - 1;
+			
+		}
+		
+		return queue.peek().currentPath;
+	}
+	
+	private ArrayList<ArrayList<Node>> getNearCities(Node startingCity, int distance, int choices, LambdaW w) {
+		
+		ArrayList<ArrayList<Node>> selectedNodes = new ArrayList<ArrayList<Node>>();
 		
 		for(int i = 0; i < choices; i++) {
 			
@@ -93,16 +141,19 @@ public class RoadMap<T extends Comparable<? super T>> {
 			Node currentNode = startingCity;
 			Random r = new Random();
 			
+			path.add(currentNode);
+			
 			while(currentLength < distance) {
 				visitedNodes.add(currentNode);
 				int next = r.nextInt(currentNode.getConnectedRoads().size());
-				Node nextNode = currentNode.getConnectedRoads().get(next).getOtherNode(currentNode); // Jank
+				Node nextNode = currentNode.getConnectedRoads().get(next).getOtherNode(currentNode);
 				if(!visitedNodes.contains(nextNode)) {
-					currentLength += currentNode.getConnectedRoads().get(next).distance;
-					path.add(currentNode);
+					currentLength += w.weight(currentNode.getConnectedRoads().get(next));
+					path.add(nextNode);
 					currentNode = nextNode;
 				}
 			}
+			path.remove(path.size() - 1);
 			if(!selectedNodes.contains(path)) {
 				selectedNodes.add(path);
 			} else {
@@ -113,90 +164,37 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return selectedNodes;
 	}
 	
+	private abstract class LambdaW { public abstract double weight(Edge e); }
 	
-	public ArrayList<String> searchForCities(String input) {
-		ArrayList<String> matches = new ArrayList<String>();
-		
-		for(String s: referenceTable.keySet()) if(s.contains(input)) matches.add(s);
-		
-		return matches;
+	private class WeightDistance extends LambdaW { 
+		public double weight(Edge e) { return e.distance; } 
 	}
+	private class WeightTime extends LambdaW { 
+		public double weight(Edge e) { return e.time; } 
+	}
+		
+	private abstract class LambdaH { public abstract double heuristic(Node node1, Node node2); } // Jank
+	
+	private class HeuristicDistance extends LambdaH {
+		public double heuristic(Node node1, Node node2) {
+			if(node1 == null | node2 == null) throw new NullPointerException();
 
-		
-	public ArrayList<Node> findMinDistance(Node start, Node end) {
-		
-		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-		ComparableNode first =  new ComparableNode(start, 0, (int) getStraightLineDistance(start, end));
-		ArrayList<Node> connected = start.getConnectedCities();
-		for(int i = 0; i < connected.size(); i++) {
+			double lat1 = (Math.PI/ 180) * (node1.latitude); // Convert to radians
+			double lat2 = (Math.PI/ 180) * (node2.latitude);
+			double long1 = (Math.PI/ 180) * (node1.longitude);
+			double long2 = (Math.PI/ 180) * (node2.longitude);
+			double a = Math.pow((Math.sin((lat2 - lat1)) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((long2 - long1) / 2) , 2);
+			double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+			double R = 3959; // In miles
 			
-			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).distance), (int) this.getStraightLineDistance(start.getConnectedCities().get(i), end)));
+			return c*R;
 		}
-		
-		int index = 1;
-		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
-
-			connected = queue.peek().currentPath.get(index).getConnectedCities();
-			
-			ComparableNode saveCompare = queue.poll();
-			Node saveNode = saveCompare.currentPath.get(index);
-			for(int i = 0; i < connected.size(); i++) {
-				if(!saveCompare.currentPath.contains(connected.get(i))){
-					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) Math.round(saveNode.connectedRoads.get(i).distance),(int) this.getStraightLineDistance(saveNode.getConnectedCities().get(i), end));
-					queue.add(addToPath);
-				}
-			}
-			
-			index = queue.peek().currentPath.size() - 1;
-			
-		}
-		
-		return queue.peek().currentPath;
 	}
 	
-	public ArrayList<Node> findMinTime(Node start, Node end) {
-		
-		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-		ComparableNode first =  new ComparableNode(start, 0, (int) getStraightLineDistance(start, end));
-		ArrayList<Node> connected = start.getConnectedCities();
-		for(int i = 0; i < connected.size(); i++) {
-			
-			queue.add(first.createNewBranch(connected.get(i), (int) Math.round(start.connectedRoads.get(i).time), (int) (this.getStraightLineDistance(start.getConnectedCities().get(i), end) / 75.0 * 60.0)));
+	private class HeuristicTime extends LambdaH {
+		public double heuristic(Node node1, Node node2) {
+			return new HeuristicDistance().heuristic(node1, node2) * 60 / 75; // TURBO-JANK
 		}
-	
-		int index = 1;
-		while(!queue.peek().currentPath.get(index).name.equals(end.name)) {
-
-			connected = queue.peek().currentPath.get(index).getConnectedCities();
-			
-			ComparableNode saveCompare = queue.poll();
-			Node saveNode = saveCompare.currentPath.get(index);
-			for(int i = 0; i < connected.size(); i++) {
-				if(!saveCompare.currentPath.contains(connected.get(i))){
-					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), (int) Math.round(saveNode.connectedRoads.get(i).time),(int) (this.getStraightLineDistance(saveNode.getConnectedCities().get(i), end)/ 75.0 * 60.0));
-					queue.add(addToPath);
-				}
-			}
-			System.out.println("After some paths:");
-			System.out.println(queue);
-			
-			index = queue.peek().currentPath.size() - 1;
-			
-		}
-		
-		return queue.peek().currentPath;
-	}
-	
-	
-	public boolean addNode(String name, NodeType type, double latitude, double longitude) {
-		referenceTable.put(name, new Node(name, type, latitude, longitude));
-		return true;
-	}
-	
-	
-	public boolean addEdge(Node firstNode, Node secondNode, String name, EdgeType type, double distance) {
-		new Edge(firstNode, secondNode, name, type, distance);
-		return true;
 	}
 	
 	
@@ -216,7 +214,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		public double getLongitude() { return longitude; }
 		public Color getColor() { return color; }
 		public void setColor(Color color) { this.color = color; }
-		
+				
 		public Node(String name, NodeType type, double latitude, double longitude) {
 			this.connectedRoads = new ArrayList<Edge>();
 			
@@ -259,13 +257,13 @@ public class RoadMap<T extends Comparable<? super T>> {
 			this.firstNode = firstNode;
 			this.secondNode = secondNode;
 			
-			this.firstNode.connectedRoads.add(this);
-			this.secondNode.connectedRoads.add(this);
+			if(this.firstNode != null) this.firstNode.connectedRoads.add(this);
+			if(this.secondNode != null) this.secondNode.connectedRoads.add(this);
 			
 			this.name = name;
 			this.type = type;
 			this.distance = distance;
-			this.time = this.distance / speedLimits.get(this.type); // Minutes
+			if(this.type != null) this.time = this.distance / speedLimits.get(this.type) * 60; // Minutes
 		}
 		
 		public Node getOtherNode(Node node) {
