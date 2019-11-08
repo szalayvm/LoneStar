@@ -82,3 +82,15 @@ Hwy55
 Laredo
 San Angelo
 Highway 321
+Hwy77
+Corpus Christi
+Brownsville
+Highway 164
+SR2
+Laredo
+Brownsville
+MainRoad 208
+Hwy10
+Beaumont
+Houston
+Highway 84.6
