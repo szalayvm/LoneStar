@@ -8,11 +8,12 @@ import java.util.TreeSet;
 
 public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
-	public Hashtable<String, Node> referenceTable;
+	private Hashtable<String, Node> referenceTable;
 	public enum NodeType {CITY, LANDMARK, OTHER};
 	public enum EdgeType {HIGHWAY, MAIN_ROAD, RURAL_ROAD, OTHER};
-	public Hashtable<EdgeType, Integer> speedLimits;
+	private final Hashtable<EdgeType, Integer> speedLimits;
 	
+	private static final int RADIUS_OF_THE_EARTH = 3959;
 	
 	public RoadMap() {
 		size = 0;
@@ -42,9 +43,9 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	public ArrayList<Node> getAllCities() {
 		ArrayList<Node> a = new ArrayList<Node>();
-		for(String s : referenceTable.keySet()) {
-			a.add(referenceTable.get(s));
-		}
+		
+		for(String s : referenceTable.keySet()) { a.add(referenceTable.get(s)); }
+		
 		return a;
 	}
 
@@ -53,14 +54,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 		TreeSet<Edge> e = new TreeSet<Edge>();
 		
 		ArrayList<Node> a = new ArrayList<Node>();
-		for(String s : referenceTable.keySet()) {
-			a.add(referenceTable.get(s));
-		}
-		for(Node n : a) {
-			e.addAll(n.getConnectedRoads());
-		}
-		edges.addAll(e);
+		for(String s : referenceTable.keySet()) { a.add(referenceTable.get(s)); }
+		for(Node n : a) { e.addAll(n.getConnectedRoads()); }
 		
+		edges.addAll(e);
 		return edges;
 	}
 		
@@ -184,7 +181,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			double long2 = (Math.PI / 180) * (node2.longitude);
 			double a = Math.pow((Math.sin((lat2 - lat1)) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((long2 - long1) / 2) , 2);
 			double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-			double R = 3959; // In miles
+			double R = RADIUS_OF_THE_EARTH;
 			
 			return (int) (c*R);
 		}
