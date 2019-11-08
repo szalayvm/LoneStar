@@ -20,6 +20,7 @@ public class MapVisualizer extends JPanel {
 	public int h;
 	public JTabbedPane tab;
 	public static final int radius = 25;
+	public ArrayList<RoadMap.Edge> edges;
 
 	public MapVisualizer(RoadMap m) {
 		this.setLayout(null);
@@ -27,6 +28,7 @@ public class MapVisualizer extends JPanel {
 		this.h = 900;
 		this.b = m;
 		this.cities = m.getAllCities();
+		this.edges = m.getAllEdges();
 		this.tab = new JTabbedPane();
 		this.makeTitle();
 		this.tripPlanner();
@@ -35,7 +37,6 @@ public class MapVisualizer extends JPanel {
 		this.tab.setSize(w / 2, h / 2);
 		this.tab.setLocation(200, 100);
 		this.add(tab, BorderLayout.SOUTH);
-		
 
 	}
 
@@ -82,23 +83,44 @@ public class MapVisualizer extends JPanel {
 		super.paintComponent(g);
 		this.setBackground(Color.WHITE);
 		int d = 30;
-		double ref = cities.get(3).getLongitude();
-		double ref2 = cities.get(4).getLatitude();
+		double minlat = this.cities.get(0).getLatitude();
+		double maxlong = this.cities.get(0).getLongitude();
 
 		for (RoadMap.Node n : cities) {
+			if (maxlong > n.getLongitude()) {
+				maxlong = n.getLongitude();
+			}
+			if (minlat < n.getLatitude()) {
+				minlat = n.getLatitude();
+			}
+
+		}
+		
+		for(RoadMap.Edge e: edges){
+			int x1 = 1300 -(int) (e.getFirstNode().getLongitude()*100 - maxlong*100) + this.radius/2;
+			int y1 = 700 + (int) (minlat *30 - e.getFirstNode().getLatitude()*30)+ this.radius/2;
+			
+			int x2 = 1300 -(int) (e.getSecondNode().getLongitude()*100 - maxlong*100) + this.radius/2;
+			int y2 = 700 + (int) (minlat *30 - e.getSecondNode().getLatitude()*30) + this.radius/2;
+			g.drawLine(x1, y1, x2, y2);
+			
+			
+		}
+
+		for (RoadMap.Node n : cities) {
+			ArrayList<RoadMap.Edge> edges = n.getConnectedRoads();
 			g.setColor(n.getColor());
-			n.getLatitude(); // y
-			int x = 1300 - (int) (n.getLongitude() * 100 - ref * 100);// x smaller
-																	// you are
-																	// the
-																	// farther
-																	// right you
-																	// are
-			int y = 700 + (int) (ref2 * 30 - n.getLatitude() * 30);
-			g.drawOval(x, y, radius, radius);
+
+			int x = 1300 - (int) (n.getLongitude() * 100 - maxlong * 100);
+			int y = 700 + (int) (minlat * 30 - n.getLatitude() * 30);
+
+
+			g.fillOval(x, y, radius, radius);
+			
 			g.drawString(n.getName(), x, y);
 
 		}
+		
 	}
 
 	public void makeTitle() {

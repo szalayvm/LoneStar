@@ -240,7 +240,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	}
 	
 	
-	public class Edge {
+	public class Edge implements Comparable<Edge> {
 		private Node firstNode;
 		private Node secondNode;
 		
@@ -272,6 +272,16 @@ public class RoadMap<T extends Comparable<? super T>> {
 		
 		public String toString() {
 			return name;
+		}
+		@Override
+		public int compareTo(Edge o) {
+			if(this.distance > o.distance) {
+				return 1;
+			} else if (this.distance < o.distance) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
 	
