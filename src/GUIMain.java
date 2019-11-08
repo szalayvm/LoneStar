@@ -106,10 +106,9 @@ public class GUIMain {
 		tab.addTab("Shortest Route", SRPanel);
 		tab.addTab("City Search", searcher);
 		
-		MapVisualizer.Window wind= map.draw();
-		wind.setLocation(w-200, h-200);
-		wind.repaint();
-		contentPane.add(wind);
+		
+		
+		contentPane.add(map);
 //		contentPane.add(titleText);
 //		contentPane.add(tab);
 		
