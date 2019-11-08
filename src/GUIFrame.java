@@ -18,6 +18,7 @@ public class GUIFrame {
 		f.add(new MapVisualizer(m)); 
 		f.setVisible(true);
 		System.out.println("Hello and something ");
+		System.out.println("Hello and something ");
 		
 	}
 
