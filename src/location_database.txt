@@ -13,12 +13,18 @@ City 31.7619 106.4850
 Waco
 City 31.5493 97.1467
 Corpus Christi
-City  27.8006 97.3964
+City 27.8006 97.3964
 Fort Worth
-City  32.7555 97.3308
+City 32.7555 97.3308
 San Angelo
-City  31.4638 100.4370
+City 31.4638 100.4370
 Laredo
-City  27.5036 99.5076
+City 27.5036 99.5076
 Victoria
 City 28.8053 97.0036
+Amarillo
+City 35.2220 101.8313
+Beaumont
+City 30.0802 94.1266
+Brownsville
+City 25.9017 97.4975

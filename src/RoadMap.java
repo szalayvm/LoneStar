@@ -82,8 +82,8 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return getNearCities(startingCity, distance, choices, new WeightDistance());
 	}
 	
-	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int distance, int choices) {
-		return getNearCities(startingCity, distance, choices, new WeightTime());
+	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int time, int choices) {
+		return getNearCities(startingCity, time, choices, new WeightTime());
 	}
 	
 	public ArrayList<Node> findMinDistance(Node start, Node end) {
@@ -248,6 +248,9 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private EdgeType type;
 		private double distance;
 		private double time;
+		
+		public Node getFirstNode() { return firstNode; }
+		public Node getSecondNode() { return secondNode; }
 		
 		public Edge(Node firstNode, Node secondNode, String name, EdgeType type, double distance) {
 			this.firstNode = firstNode;
