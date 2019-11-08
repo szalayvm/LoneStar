@@ -10,8 +10,8 @@ public class RoadMapStart {
 		
 		getLocationsFromFile(g);
 		getRoadsFromFile(g);
-//		GUIMain.constructGUI(g);
-		GUIFrame.create(g); // This is the only thing that I added to RoadMapStart
+		GUIFrame.create(g);
+		
 		
 //		for(Object c: b.referenceTable.keySet()) {
 //			RoadMap.Node n = b.getNodeFromString(c.toString());
@@ -20,8 +20,8 @@ public class RoadMapStart {
 //			System.out.println(n.getConnectedCities());
 //		}
 		System.out.println("Result:");
-		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Corpus Christi")));
-//		System.out.println(g.getNearCitiesToDistance(g.getNodeFromString("Houston"), 400, 2));
+		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Fort Worth")).toString());
+		
 		
 		
 		
