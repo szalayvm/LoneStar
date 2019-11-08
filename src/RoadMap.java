@@ -9,7 +9,7 @@ import java.util.TreeSet;
 public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
 	private Hashtable<String, Node> referenceTable;
-	public enum NodeType {CITY, LANDMARK, OTHER};
+	public enum NodeType {CITY, LANDMARK, PARK, OTHER};
 	public enum EdgeType {HIGHWAY, MAIN_ROAD, RURAL_ROAD, OTHER};
 	private final Hashtable<EdgeType, Integer> speedLimits;
 	

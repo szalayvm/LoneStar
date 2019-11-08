@@ -39,6 +39,8 @@ public class RoadMapStart {
 					nodetype = RoadMap.NodeType.CITY;
 				} else if(locationtype.equals("Landmark")) {
 					nodetype = RoadMap.NodeType.LANDMARK;
+				} else if(locationtype.equals("Park")){
+					nodetype = RoadMap.NodeType.PARK;
 				} else {
 					nodetype = RoadMap.NodeType.OTHER;
 				}
