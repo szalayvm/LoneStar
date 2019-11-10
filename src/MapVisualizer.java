@@ -2,7 +2,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import javafx.scene.text.TextAlignment;
+import sun.java2d.pipe.TextRenderer;
+
 public class MapVisualizer extends JPanel {
 	public RoadMap b;
 	public ArrayList<RoadMap.Node> cities;
@@ -21,8 +26,10 @@ public class MapVisualizer extends JPanel {
 	public JTabbedPane tab;
 	public static final int radius = 25;
 	public ArrayList<RoadMap.Edge> edges;
+	public ArrayList<RoadMap.Node> result;
 
 	public MapVisualizer(RoadMap m) {
+		this.result = new ArrayList<RoadMap.Node>();
 		this.setLayout(null);
 		this.w = 900;
 		this.h = 900;
@@ -120,10 +127,14 @@ public class MapVisualizer extends JPanel {
 		tab.addTab("Shortest Route", SRPanel);
 
 	}
-
+	public enum TextAlignment{
+		Top_LEFT,
+		Top,
+	}
 	@Override
 	public void paintComponent(Graphics g) {// Bottom right is Galv
 
+		Graphics2D g2 = (Graphics2D) g;
 		super.paintComponent(g);
 		this.setBackground(Color.WHITE);
 		int d = 30;
@@ -165,6 +176,15 @@ public class MapVisualizer extends JPanel {
 
 		}
 		
+		Rectangle bound = new Rectangle(3*w/4, 80, 200, 200);
+		g.setFont(new Font("Times New Roman", 1, 20));
+		//TextRenderer.drawString(g, "Optimal Path: ", getFont(), Color.WHITE, bound, TextAlignment.Top_LEFT);
+		
+		
+		g.drawString("Optimal Path: ", (3*w)/4, 80);
+		g.setFont(new Font("Times New Roman", 1, 15));
+		g.drawString(result.toString(), (3*w)/4, 100);
+		
 	}
 
 	public JLabel makeLabel(String s) {
@@ -203,7 +223,9 @@ public class MapVisualizer extends JPanel {
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
 			
-			System.out.println(b.findMinDistance(startNode, endNode));
+			result = b.findMinDistance(startNode, endNode);
+			//System.out.println(b.findMinDistance(startNode, endNode));
+			repaint();
 		}
 	}
 	
@@ -227,6 +249,8 @@ public class MapVisualizer extends JPanel {
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
 			
 			System.out.println(b.findMinTime(startNode, endNode));
+			result = b.findMinTime(startNode, endNode);
+			repaint();
 		}
 	}
 
@@ -249,9 +273,8 @@ public class MapVisualizer extends JPanel {
 			//System.out.println(timenum);
 			
 			System.out.println(b.getNearCitiesToTime(startNode, timenum));
-			
-			
-			
+			result = b.getNearCitiesToTime(startNode, timenum);
+			repaint();
 		}
 	}
 	
@@ -275,7 +298,9 @@ public class MapVisualizer extends JPanel {
 			int distancenum = Integer.parseInt(this.distance.getText());
 			//System.out.println(timenum);
 			
-			System.out.println(b.getNearCitiesToTime(startNode, distancenum));
+			System.out.println(b.getNearCitiesToDistance(startNode, distancenum));
+			result = b.getNearCitiesToDistance(startNode, distancenum);
+			repaint();
 		}
 	}
 }
