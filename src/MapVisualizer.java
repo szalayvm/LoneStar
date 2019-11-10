@@ -199,14 +199,17 @@ public class MapVisualizer extends JPanel {
 			System.out.println("Button pressed");
 			System.out.println("The start is " + this.start.getText());
 			System.out.println("The end is" + this.end.getText());
+			
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
+			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
+			
+			System.out.println(b.findMinDistance(startNode, endNode));
 		}
 	}
 	
 	class SRtimeListener implements ActionListener {
 		JTextField start;
 		JTextField end;
-		SRtimeListener() {
-		}
 		
 		SRtimeListener(JTextField start, JTextField end)
 		{
@@ -215,9 +218,21 @@ public class MapVisualizer extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Button pressed");
-			System.out.println("The start is" + this.start.getText());
-			System.out.println("The end is" + this.end.getText());
+			if(this.start.getText().isEmpty() || this.end.getText().isEmpty())
+			{
+				System.out.println("You forgot to enter starting and ending cities! Please try again.");
+				throw new NullPointerException();
+			}
+			else {
+				System.out.println("Button pressed");
+				System.out.println("The start is" + this.start.getText());
+				System.out.println("The end is" + this.end.getText());
+			
+				RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
+				RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
+			
+				System.out.println(b.findMinTime(startNode, endNode));
+			}
 		}
 	}
 
