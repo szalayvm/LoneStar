@@ -79,11 +79,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 	}
 	
 	public ArrayList<ArrayList<Node>> getNearCitiesToDistance(Node startingCity, int distance, int choices) {
-		return getNearCities(startingCity, distance, choices, new WeightDistance());
+		return getNearCities(startingCity, distance, new WeightDistance());
 	}
 	
 	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int time, int choices) {
-		return getNearCities(startingCity, time, choices, new WeightTime());
+		return getNearCities(startingCity, time, new WeightTime());
 	}
 	
 	public ArrayList<Node> findMinDistance(Node start, Node end) {
@@ -125,41 +125,29 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return queue.peek().currentPath;
 	}
 	
-	private ArrayList<ArrayList<Node>> getNearCities(Node startingCity, int distance, int choices, LambdaW w) {
+	private ArrayList<ArrayList<Node>> getNearCities(Node startingCity, int distance, LambdaW w) {
 		
 		ArrayList<ArrayList<Node>> selectedNodes = new ArrayList<ArrayList<Node>>();
 		
-		for(int i = 0; i < choices; i++) {
-			
-			int currentLength =  0;
-			ArrayList<Node> visitedNodes = new ArrayList<Node>();
-			ArrayList<Node> path = new ArrayList<Node>();
-			Node currentNode = startingCity;
-			Random r = new Random();
-			
-			path.add(currentNode);
-			
-			while(currentLength < distance) {
-				visitedNodes.add(currentNode);
-				int next = r.nextInt(currentNode.getConnectedRoads().size());
-				Node nextNode = currentNode.getConnectedRoads().get(next).getOtherNode(currentNode);
-				if(!visitedNodes.contains(nextNode)) {
-					currentLength += w.weight(currentNode.getConnectedRoads().get(next));
-					path.add(nextNode);
-					currentNode = nextNode;
-				}
-			}
-			path.remove(path.size() - 1);
-			if(!selectedNodes.contains(path)) {
-				selectedNodes.add(path);
-			} else {
-				i--;
-			}
-		}
+		int currentDistance = 0;
+		ArrayList<Node> path = new ArrayList<Node>();
+		
+		addCitiesToPath(path, currentDistance, distance, startingCity, selectedNodes, w);
 		
 		return selectedNodes;
 	}
 	
+	private void addCitiesToPath(ArrayList<Node> path, int currentDistance, int maxDistance, Node city, ArrayList<ArrayList<Node>> paths, LambdaW w) {
+		path.add(city);
+		for(Edge e : city.getConnectedRoads()) {
+			if(currentDistance <= maxDistance) {
+				addCitiesToPath(path, currentDistance + w.weight(e), maxDistance, e.getOtherNode(city), paths, w);
+			} else {
+				paths.add(path);
+			}
+		}
+	}
+
 	private abstract class LambdaW { public abstract int weight(Edge e); }
 	
 	private class WeightDistance extends LambdaW { 
