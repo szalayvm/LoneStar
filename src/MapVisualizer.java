@@ -218,21 +218,15 @@ public class MapVisualizer extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			if(this.start.getText().isEmpty() || this.end.getText().isEmpty())
-			{
-				System.out.println("You forgot to enter starting and ending cities! Please try again.");
-				throw new NullPointerException();
-			}
-			else {
-				System.out.println("Button pressed");
-				System.out.println("The start is" + this.start.getText());
-				System.out.println("The end is" + this.end.getText());
 			
-				RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
-				RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
+			System.out.println("Button pressed");
+			System.out.println("The start is" + this.start.getText());
+			System.out.println("The end is" + this.end.getText());
 			
-				System.out.println(b.findMinTime(startNode, endNode));
-			}
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
+			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
+			
+			System.out.println(b.findMinTime(startNode, endNode));
 		}
 	}
 
