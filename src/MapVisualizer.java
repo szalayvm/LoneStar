@@ -39,11 +39,14 @@ public class MapVisualizer extends JPanel {
 		this.add(tab, BorderLayout.SOUTH);
 
 	}
+	
+	public void makeTitle() {
+		JLabel titleText = new JLabel("Lone Star Traversal");
+		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
+		titleText.setSize(w, h);
+		titleText.setFont(new Font("Freestyle Script", 1, 30));
 
-	private void searcher() {
-		JTextField searcher = this.makeField("Enter in a character and see which city you want!");
-		this.tab.addTab("City Searcher", searcher);
-
+		this.add(titleText);
 	}
 
 	private void tripPlanner() {
@@ -58,6 +61,9 @@ public class MapVisualizer extends JPanel {
 		JTextField distance = this.makeField("0");
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
+		
+		timeButton.addActionListener(new TPtimeListener(start, time));
+		distanceButton.addActionListener(new TPdistanceListener(start, distance));
 
 		JPanel TPPanel = new JPanel();
 		TPPanel.setOpaque(true);
@@ -74,6 +80,44 @@ public class MapVisualizer extends JPanel {
 		TPPanel.add(distanceButton);
 
 		tab.addTab("Trip Planner", TPPanel);
+
+	}
+	
+	private void searcher() {
+		JTextField searcher = this.makeField("Enter in a character and see which city you want!");
+		this.tab.addTab("City Searcher", searcher);
+
+	}
+
+	public void shortRoute() {
+		GridLayout SRlayout = new GridLayout(6, 0);
+
+		JPanel SRPanel = new JPanel();
+		SRPanel.setOpaque(true);
+		SRPanel.setBackground(Color.white);
+		SRPanel.setSize(200, 200);
+		SRPanel.setLayout(SRlayout);
+
+		JLabel startlabel = this.makeLabel("Starting City: ");
+		JLabel endlabel = this.makeLabel("Ending City:");
+
+		JTextField start = this.makeField("Enter Your Starting City");
+		start.addActionListener(new TextFieldListener(start));
+		JTextField end = this.makeField("Enter Your Ending City");
+
+		JButton SRdistance = new JButton("Find Based on Distance");
+		JButton SRtime = new JButton("Find Based on Time");
+		SRdistance.addActionListener(new SRdistanceListener(start, end));
+		SRtime.addActionListener(new SRtimeListener(start, end));
+
+		SRPanel.add(startlabel);
+		SRPanel.add(start);
+		SRPanel.add(endlabel);
+		SRPanel.add(end);
+		SRPanel.add(SRdistance);
+		SRPanel.add(SRtime);
+
+		tab.addTab("Shortest Route", SRPanel);
 
 	}
 
@@ -123,15 +167,6 @@ public class MapVisualizer extends JPanel {
 		
 	}
 
-	public void makeTitle() {
-		JLabel titleText = new JLabel("Lone Star Traversal");
-		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
-		titleText.setSize(w, h);
-		titleText.setFont(new Font("Freestyle Script", 1, 30));
-
-		this.add(titleText);
-	}
-
 	public JLabel makeLabel(String s) {
 		// JLabel startlabel = new JLabel();
 		//
@@ -146,41 +181,77 @@ public class MapVisualizer extends JPanel {
 		return new JTextField(s);
 	}
 
-	public void shortRoute() {
-		GridLayout SRlayout = new GridLayout(5, 0);
-
-		JPanel SRPanel = new JPanel();
-		SRPanel.setOpaque(true);
-		SRPanel.setBackground(Color.white);
-		SRPanel.setSize(200, 200);
-		SRPanel.setLayout(SRlayout);
-
-		JLabel startlabel = this.makeLabel("Starting City: ");
-		JLabel endlabel = this.makeLabel("Ending City:");
-
-		JTextField start = this.makeField("Enter Your Starting City");
-		JTextField end = this.makeField("Enter Your Ending City");
-
-		JButton SR = new JButton("Go!");
-		SR.addActionListener(new ButtonListener());
-
-		SRPanel.add(startlabel);
-		SRPanel.add(start);
-		SRPanel.add(endlabel);
-		SRPanel.add(end);
-		SRPanel.add(SR);
-
-		tab.addTab("Shortest Route", SRPanel);
-
-	}
-
-	class ButtonListener implements ActionListener {
-		ButtonListener() {
+	//make null checks on buttons
+	
+	class SRdistanceListener implements ActionListener {
+		JTextField start;
+		JTextField end;
+		SRdistanceListener() {
+		}
+		
+		SRdistanceListener(JTextField start, JTextField end)
+		{
+			this.start = start;
+			this.end = end;
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Button pressed");
+			System.out.println("The start is " + this.start.getText());
+			System.out.println("The end is" + this.end.getText());
+		}
+	}
+	
+	class SRtimeListener implements ActionListener {
+		JTextField start;
+		JTextField end;
+		SRtimeListener() {
+		}
+		
+		SRtimeListener(JTextField start, JTextField end)
+		{
+			this.start = start;
+			this.end = end;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Button pressed");
+			System.out.println("The start is" + this.start.getText());
+			System.out.println("The end is" + this.end.getText());
 		}
 	}
 
+	class TPtimeListener implements ActionListener{
+		JTextField start;
+		JTextField time;
+		
+		TPtimeListener(JTextField start, JTextField time){
+			this.start = start;
+			this.time = time;
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Button pressed");
+			System.out.println("The start is " + this.start.getText());
+			System.out.println("The time is " + this.time.getText());
+		}
+	}
+	
+	class TPdistanceListener implements ActionListener{
+		JTextField start;
+		JTextField distance;
+		TPdistanceListener(){
+		}
+		
+		TPdistanceListener(JTextField start, JTextField distance){
+			this.start = start;
+			this.distance = distance;
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("Button pressed");
+			System.out.println("The start is" + this.start.getText());
+			System.out.println("The distance is" + this.distance.getText());
+		}
+	}
 }
