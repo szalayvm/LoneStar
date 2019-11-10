@@ -138,7 +138,6 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private void addCitiesToPath(ArrayList<Node> path, int currentDistance, int maxDistance, Node city, ArrayList<ArrayList<Node>> paths, LambdaW w) {
 		path.add(city);
-//		System.out.println(path);
 		if(currentDistance <= maxDistance) {
 			for(Edge e : city.getConnectedRoads()) {
 				ArrayList<Node> newPath = new ArrayList<Node>();
