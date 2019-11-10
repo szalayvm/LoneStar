@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.PriorityQueue;
-import java.util.Random;
 import java.util.TreeSet;
 
 
@@ -78,11 +77,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return matches;
 	}
 	
-	public ArrayList<ArrayList<Node>> getNearCitiesToDistance(Node startingCity, int distance, int choices) {
+	public ArrayList<ArrayList<Node>> getNearCitiesToDistance(Node startingCity, int distance) {
 		return getNearCities(startingCity, distance, new WeightDistance());
 	}
 	
-	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int time, int choices) {
+	public ArrayList<ArrayList<Node>> getNearCitiesToTime(Node startingCity, int time) {
 		return getNearCities(startingCity, time, new WeightTime());
 	}
 	
@@ -139,12 +138,16 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private void addCitiesToPath(ArrayList<Node> path, int currentDistance, int maxDistance, Node city, ArrayList<ArrayList<Node>> paths, LambdaW w) {
 		path.add(city);
-		for(Edge e : city.getConnectedRoads()) {
-			if(currentDistance <= maxDistance) {
-				addCitiesToPath(path, currentDistance + w.weight(e), maxDistance, e.getOtherNode(city), paths, w);
-			} else {
-				paths.add(path);
+		if(currentDistance <= maxDistance) {
+			for(Edge e : city.getConnectedRoads()) {
+				ArrayList<Node> newPath = new ArrayList<Node>();
+				newPath.addAll(path);
+				addCitiesToPath(newPath, currentDistance + w.weight(e), maxDistance, e.getOtherNode(city), paths, w);
 			}
+		} else {
+				ArrayList<Node> newPath = new ArrayList<Node>();
+				newPath.addAll(path);
+				paths.add(newPath);
 		}
 	}
 
