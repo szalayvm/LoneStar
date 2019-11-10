@@ -196,9 +196,9 @@ public class MapVisualizer extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Button pressed");
-			System.out.println("The start is " + this.start.getText());
-			System.out.println("The end is" + this.end.getText());
+			//System.out.println("Button pressed");
+			//System.out.println("The start is " + this.start.getText());
+			//System.out.println("The end is" + this.end.getText());
 			
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
@@ -219,9 +219,9 @@ public class MapVisualizer extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			
-			System.out.println("Button pressed");
-			System.out.println("The start is" + this.start.getText());
-			System.out.println("The end is" + this.end.getText());
+			//System.out.println("Button pressed");
+			//System.out.println("The start is" + this.start.getText());
+			//System.out.println("The end is" + this.end.getText());
 			
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
@@ -240,9 +240,18 @@ public class MapVisualizer extends JPanel {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Button pressed");
-			System.out.println("The start is " + this.start.getText());
-			System.out.println("The time is " + this.time.getText());
+			//System.out.println("Button pressed");
+			//System.out.println("The start is " + this.start.getText());
+			//System.out.println("The time is " + this.time.getText());
+			
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
+			int timenum = Integer.parseInt(this.time.getText());
+			//System.out.println(timenum);
+			
+			System.out.println(b.getNearCitiesToTime(startNode, timenum));
+			
+			
+			
 		}
 	}
 	
@@ -258,9 +267,15 @@ public class MapVisualizer extends JPanel {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Button pressed");
-			System.out.println("The start is" + this.start.getText());
-			System.out.println("The distance is" + this.distance.getText());
+			//System.out.println("Button pressed");
+			//System.out.println("The start is" + this.start.getText());
+			//System.out.println("The distance is" + this.distance.getText());
+			
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
+			int distancenum = Integer.parseInt(this.distance.getText());
+			//System.out.println(timenum);
+			
+			System.out.println(b.getNearCitiesToTime(startNode, distancenum));
 		}
 	}
 }
