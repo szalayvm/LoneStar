@@ -17,8 +17,7 @@ public class GUIFrame {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(new MapVisualizer(m)); 
 		f.setVisible(true);
-		System.out.println("Hello and something ");
-		System.out.println("Hello and something ");
+		
 		
 	}
 

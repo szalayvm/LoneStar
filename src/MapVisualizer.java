@@ -13,10 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-import javafx.scene.text.TextAlignment;
-import sun.java2d.pipe.TextRenderer;
 
 public class MapVisualizer extends JPanel {
 	public RoadMap b;
@@ -27,6 +25,7 @@ public class MapVisualizer extends JPanel {
 	public static final int radius = 25;
 	public ArrayList<RoadMap.Edge> edges;
 	public ArrayList<RoadMap.Node> result;
+	public JTextArea area;
 
 	public MapVisualizer(RoadMap m) {
 		this.result = new ArrayList<RoadMap.Node>();
@@ -44,9 +43,14 @@ public class MapVisualizer extends JPanel {
 		this.tab.setSize(w / 2, h / 2);
 		this.tab.setLocation(200, 100);
 		this.add(tab, BorderLayout.SOUTH);
-
+		this.area = new JTextArea();
+		this.area.setSize(500, 500);
+		this.area.setLocation(3 * w / 4, 80);
+		this.area.setLineWrap(true);
+		area.setWrapStyleWord(true);
+		this.add(this.area);
 	}
-	
+
 	public void makeTitle() {
 		JLabel titleText = new JLabel("Lone Star Traversal");
 		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
@@ -68,7 +72,7 @@ public class MapVisualizer extends JPanel {
 		JTextField distance = this.makeField("0");
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
-		
+
 		timeButton.addActionListener(new TPtimeListener(start, time));
 		distanceButton.addActionListener(new TPdistanceListener(start, distance));
 
@@ -89,7 +93,7 @@ public class MapVisualizer extends JPanel {
 		tab.addTab("Trip Planner", TPPanel);
 
 	}
-	
+
 	private void searcher() {
 		JTextField searcher = this.makeField("Enter in a character and see which city you want!");
 		this.tab.addTab("City Searcher", searcher);
@@ -127,10 +131,11 @@ public class MapVisualizer extends JPanel {
 		tab.addTab("Shortest Route", SRPanel);
 
 	}
-	public enum TextAlignment{
-		Top_LEFT,
-		Top,
+
+	public enum TextAlignment {
+		Top_LEFT, Top,
 	}
+
 	@Override
 	public void paintComponent(Graphics g) {// Bottom right is Galv
 
@@ -150,16 +155,15 @@ public class MapVisualizer extends JPanel {
 			}
 
 		}
-		
-		for(RoadMap.Edge e: edges){
-			int x1 = 1300 -(int) (e.getFirstNode().getLongitude()*100 - maxlong*100) + this.radius/2;
-			int y1 = 700 + (int) (minlat *30 - e.getFirstNode().getLatitude()*30)+ this.radius/2;
-			
-			int x2 = 1300 -(int) (e.getSecondNode().getLongitude()*100 - maxlong*100) + this.radius/2;
-			int y2 = 700 + (int) (minlat *30 - e.getSecondNode().getLatitude()*30) + this.radius/2;
+
+		for (RoadMap.Edge e : edges) {
+			int x1 = 1300 - (int) (e.getFirstNode().getLongitude() * 100 - maxlong * 100) + this.radius / 2;
+			int y1 = 600 + (int) (minlat * 30 - e.getFirstNode().getLatitude() * 30) + this.radius / 2;
+
+			int x2 = 1300 - (int) (e.getSecondNode().getLongitude() * 100 - maxlong * 100) + this.radius / 2;
+			int y2 = 600 + (int) (minlat * 30 - e.getSecondNode().getLatitude() * 30) + this.radius / 2;
 			g.drawLine(x1, y1, x2, y2);
-			
-			
+
 		}
 
 		for (RoadMap.Node n : cities) {
@@ -167,24 +171,26 @@ public class MapVisualizer extends JPanel {
 			g.setColor(n.getColor());
 
 			int x = 1300 - (int) (n.getLongitude() * 100 - maxlong * 100);
-			int y = 700 + (int) (minlat * 30 - n.getLatitude() * 30);
-
+			int y = 600 + (int) (minlat * 30 - n.getLatitude() * 30);
 
 			g.fillOval(x, y, radius, radius);
-			
-			g.drawString(n.getName(), x, y);
+
+			g.setFont(new Font("Times New Roman", Font.BOLD, 15));
+			g.setColor(Color.BLUE);
+			if (n.getName().equals("Fort Worth")) {
+				g.drawString(n.getName(), x - 25, y);
+			} else {
+				g.drawString(n.getName(), x, y);
+			}
 
 		}
-		
-		Rectangle bound = new Rectangle(3*w/4, 80, 200, 200);
+
+		Rectangle bound = new Rectangle(3 * w / 4, 80, 200, 200);
 		g.setFont(new Font("Times New Roman", 1, 20));
-		//TextRenderer.drawString(g, "Optimal Path: ", getFont(), Color.WHITE, bound, TextAlignment.Top_LEFT);
-		
-		
-		g.drawString("Optimal Path: ", (3*w)/4, 80);
-		g.setFont(new Font("Times New Roman", 1, 15));
-		g.drawString(result.toString(), (3*w)/4, 100);
-		
+
+		this.area.setText("Optimal Path: \n" + result.toString());
+		this.area.setFont(new Font("Times New Roman", 1, 15));
+
 	}
 
 	public JLabel makeLabel(String s) {
@@ -201,104 +207,85 @@ public class MapVisualizer extends JPanel {
 		return new JTextField(s);
 	}
 
-	//make null checks on buttons
-	
+	// make null checks on buttons
+
 	class SRdistanceListener implements ActionListener {
 		JTextField start;
 		JTextField end;
+
 		SRdistanceListener() {
 		}
-		
-		SRdistanceListener(JTextField start, JTextField end)
-		{
+
+		SRdistanceListener(JTextField start, JTextField end) {
 			this.start = start;
 			this.end = end;
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			//System.out.println("Button pressed");
-			//System.out.println("The start is " + this.start.getText());
-			//System.out.println("The end is" + this.end.getText());
-			
+
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
-			
+
 			result = b.findMinDistance(startNode, endNode);
-			//System.out.println(b.findMinDistance(startNode, endNode));
 			repaint();
 		}
 	}
-	
+
 	class SRtimeListener implements ActionListener {
 		JTextField start;
 		JTextField end;
-		
-		SRtimeListener(JTextField start, JTextField end)
-		{
+
+		SRtimeListener(JTextField start, JTextField end) {
 			this.start = start;
 			this.end = end;
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			
-			//System.out.println("Button pressed");
-			//System.out.println("The start is" + this.start.getText());
-			//System.out.println("The end is" + this.end.getText());
-			
+
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
-			
-			System.out.println(b.findMinTime(startNode, endNode));
+
 			result = b.findMinTime(startNode, endNode);
 			repaint();
 		}
 	}
 
-	class TPtimeListener implements ActionListener{
+	class TPtimeListener implements ActionListener {
 		JTextField start;
 		JTextField time;
-		
-		TPtimeListener(JTextField start, JTextField time){
+
+		TPtimeListener(JTextField start, JTextField time) {
 			this.start = start;
 			this.time = time;
 		}
-		
+
 		public void actionPerformed(ActionEvent e) {
-			//System.out.println("Button pressed");
-			//System.out.println("The start is " + this.start.getText());
-			//System.out.println("The time is " + this.time.getText());
-			
+
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			int timenum = Integer.parseInt(this.time.getText());
-			//System.out.println(timenum);
-			
-			System.out.println(b.getNearCitiesToTime(startNode, timenum));
+
 			result = b.getNearCitiesToTime(startNode, timenum);
 			repaint();
 		}
 	}
-	
-	class TPdistanceListener implements ActionListener{
+
+	class TPdistanceListener implements ActionListener {
 		JTextField start;
 		JTextField distance;
-		TPdistanceListener(){
+
+		TPdistanceListener() {
 		}
-		
-		TPdistanceListener(JTextField start, JTextField distance){
+
+		TPdistanceListener(JTextField start, JTextField distance) {
 			this.start = start;
 			this.distance = distance;
 		}
-		
+
 		public void actionPerformed(ActionEvent e) {
-			//System.out.println("Button pressed");
-			//System.out.println("The start is" + this.start.getText());
-			//System.out.println("The distance is" + this.distance.getText());
-			
+
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
 			int distancenum = Integer.parseInt(this.distance.getText());
-			//System.out.println(timenum);
-			
-			System.out.println(b.getNearCitiesToDistance(startNode, distancenum));
+
 			result = b.getNearCitiesToDistance(startNode, distancenum);
 			repaint();
 		}
