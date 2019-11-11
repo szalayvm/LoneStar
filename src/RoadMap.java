@@ -63,10 +63,18 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public Node getNodeFromString(String key) throws NullPointerException {
 		Node value = referenceTable.get(key);
 		if(value == null) {
-			System.out.println("City " + key + " does not exist! Are you sure you spelled it right?");
+			System.out.println("City " + key + " is not in the RoadMap.");
 			throw new NullPointerException();
 		}
 		return value;
+	}
+	
+	public double getDistanceFromPath(ArrayList<Node> path) {
+		return pathLength(path, new WeightDistance());
+	}
+	
+	public double getTimeFromPath(ArrayList<Node> path) {
+		return pathLength(path, new WeightTime());
 	}
 	
 	public ArrayList<String> searchForCities(String input) {
@@ -93,7 +101,27 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return AStar(start, end, new HeuristicTime(), new WeightTime());
 	}
 
+	private double pathLength(ArrayList<Node> path, LambdaW w) {
+		int length = 0;
+		for(int i = 0; i<path.size() - 1; i++) {
+			length += w.weight(getRoadBetweenCities(path.get(i), path.get(i + 1)));
+		}
+		return length;
+	}
+	
+	private Edge getRoadBetweenCities(Node node, Node node2) {
+		for(Edge e: node.getConnectedRoads()) {
+			for(Edge e2: node2.getConnectedRoads()) {
+				if(e2.equals(e)) {
+					return e;
+				}
+			}
+		}
 		
+		return null;
+	}
+
+
 	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
