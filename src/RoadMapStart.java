@@ -21,7 +21,7 @@ public class RoadMapStart {
 //		}
 //		System.out.println("Result:");
 //		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Fort Worth")).toString());
-		
+//
 //		System.out.println(g.getNearCitiesToDistance(g.getNodeFromString("Galveston"), 500));
 		
 	}
