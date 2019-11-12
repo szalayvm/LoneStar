@@ -345,7 +345,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			newList.add(newCity);
 			Integer newDistance = this.cost + cost;
 			Integer newNewTime = this.currentTime + newTime;
-			return new ComparableNode(newList, newDistance, heuristic, newTime);
+			return new ComparableNode(newList, newDistance, heuristic, newNewTime);
 		}
 		
 			
