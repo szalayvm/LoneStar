@@ -30,6 +30,8 @@ public class MapVisualizer extends JPanel {
 	public ArrayList<ArrayList<RoadMap.Node>> tpR;
 	public boolean TP;
 	public JTextArea tpArea;
+	public Color red = new Color(222, 70, 70);
+	public Color blue = new Color(69, 126, 216);
 
 	public MapVisualizer(RoadMap m) {
 		this.TP = false;
@@ -142,7 +144,7 @@ public class MapVisualizer extends JPanel {
 	}
 
 	public void shortRoute() {
-		GridLayout SRlayout = new GridLayout(6, 0);
+		GridLayout SRlayout = new GridLayout(8, 0);
 
 		JPanel SRPanel = new JPanel();
 		SRPanel.setOpaque(true);
@@ -151,11 +153,20 @@ public class MapVisualizer extends JPanel {
 		SRPanel.setLayout(SRlayout);
 
 		JLabel startlabel = this.makeLabel("Starting City: ");
+		startlabel.setOpaque(true);
+		startlabel.setBackground(blue);
 		JLabel endlabel = this.makeLabel("Ending City:");
+		endlabel.setOpaque(true);
+		endlabel.setBackground(red);
+		JLabel timelabel = this.makeLabel("Enter in the military time :");
 
 		JTextField start = this.makeField("Enter Your Starting City");
 		start.addActionListener(new TextFieldListener(start));
+		//start.setBackground(blue);
 		JTextField end = this.makeField("Enter Your Ending City");
+		end.setBackground(blue);
+		JTextField time = this.makeField("Enter in the Time of Day");
+		time.setBackground(red);
 
 		JButton SRdistance = new JButton("Find Based on Distance");
 		JButton SRtime = new JButton("Find Based on Time");
@@ -166,6 +177,8 @@ public class MapVisualizer extends JPanel {
 		SRPanel.add(start);
 		SRPanel.add(endlabel);
 		SRPanel.add(end);
+		SRPanel.add(timelabel);
+		SRPanel.add(time);
 		SRPanel.add(SRdistance);
 		SRPanel.add(SRtime);
 
