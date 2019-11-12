@@ -12,7 +12,7 @@ public class TextFieldListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// Here we will pass the text to the algorithim to do starting city ect
-		System.out.println(this.box.getText());
+		
 		
 	}
 

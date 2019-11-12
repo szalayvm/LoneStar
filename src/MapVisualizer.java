@@ -50,7 +50,6 @@ public class MapVisualizer extends JPanel {
 		this.tab.setSize(w / 2, h / 2);
 		this.tab.setLocation(10, 100);
 		this.add(tab, BorderLayout.SOUTH);
-		
 
 		this.sdArea = new JTextArea();
 		this.sdArea.setSize(500, 150);
@@ -77,7 +76,7 @@ public class MapVisualizer extends JPanel {
 		this.add(this.sdArea);
 		this.add(this.tArea);
 		this.add(this.tpArea);
-		
+
 	}
 
 	public void makeTitle() {
@@ -124,8 +123,21 @@ public class MapVisualizer extends JPanel {
 	}
 
 	private void searcher() {
-		JTextField searcher = this.makeField("Enter in a character and see which city you want!");
-		this.tab.addTab("City Searcher", searcher);
+		GridLayout searchG = new GridLayout(2, 0);
+		JTextField searcher = new JTextField("Enter in a character and see which city you want!");
+
+		JPanel searchP = new JPanel();
+		JTextArea output = new JTextArea("Possible Cities: ");
+		output.setLineWrap(true);
+		output.setWrapStyleWord(true);
+
+		searcher.addActionListener(new cityListener(searcher, output));
+		searchP.setLayout(searchG);
+
+		searchP.add(searcher);
+		searchP.add(output);
+
+		this.tab.addTab("City Searcher", searchP);
 
 	}
 
@@ -163,7 +175,7 @@ public class MapVisualizer extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {// Bottom right is Galv
-		
+
 		super.paintComponent(g);
 		this.setBackground(Color.WHITE);
 		int d = 30;
@@ -237,9 +249,10 @@ public class MapVisualizer extends JPanel {
 
 		}
 		TP = false;
-		result.clear();
+
 		setNodeBlack();
 		setTPBlack();
+		result.clear();
 		tpR.clear();
 
 	}
@@ -263,6 +276,7 @@ public class MapVisualizer extends JPanel {
 	}
 
 	public void setNodeBlack() {
+
 		for (RoadMap.Node n : result) {
 			n.setColor(Color.BLACK);
 		}
@@ -355,10 +369,10 @@ public class MapVisualizer extends JPanel {
 			TP = true;
 
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
-			int timenum = Integer.parseInt(this.time.getText().trim());
+			int timenum = Integer.parseInt((this.time.getText().trim()));
 			if (startNode != null) {
 
-				tpR = b.getNearCitiesToTime(startNode, timenum * 60);
+				tpR = b.getNearCitiesToTime(startNode, (int) (timenum * 60));
 				setTPRed();
 				repaint();
 			} else {
@@ -396,5 +410,23 @@ public class MapVisualizer extends JPanel {
 
 		}
 	}
-	
+
+	class cityListener implements ActionListener {
+		public JTextField i;
+		public JTextArea o;
+
+		public cityListener(JTextField searcher, JTextArea output) {
+			this.i = searcher;
+			this.o = output;
+
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			this.o.setText("Possible Cities: \n" + b.searchForCities(this.i.getText()).toString());
+
+		}
+
+	}
+
 }
