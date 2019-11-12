@@ -6,27 +6,13 @@ import java.util.Scanner;
 public class RoadMapStart {
 	
 	public static void main(String[] args) throws IOException {
-		RoadMap g = new RoadMap();
-		
+		RoadMap g = new RoadMap();		
 		getLocationsFromFile(g);
 		getRoadsFromFile(g);
-		GUIFrame.create(g);
-		
-		
-//		for(Object c: b.referenceTable.keySet()) {
-//			RoadMap.Node n = b.getNodeFromString(c.toString());
-//			System.out.println(n);
-//			System.out.println(n.getConnectedRoads());
-//			System.out.println(n.getConnectedCities());
-//		}
-//		System.out.println("Result:");
-//		System.out.println(g.findMinDistance(g.getNodeFromString("Galveston"), g.getNodeFromString("Fort Worth")).toString());
-//
-//		System.out.println(g.getNearCitiesToDistance(g.getNodeFromString("Galveston"), 500));
-		
+		GUIFrame.create(g);		
 	}
 
-	private static void getLocationsFromFile(RoadMap b) {
+	private static void getLocationsFromFile(RoadMap g) {
 		try {
 			Scanner s = new Scanner(new File("src/location_database.txt"));
 			while(s.hasNextLine()) {
@@ -45,7 +31,7 @@ public class RoadMapStart {
 				double latitude = s.nextDouble();
 				double longitude = s.nextDouble();
 				
-				b.addNode(name, nodetype, latitude, longitude);
+				g.addNode(name, nodetype, latitude, longitude);
 				if(s.hasNextLine()) {
 					s.nextLine();
 				}
@@ -58,7 +44,7 @@ public class RoadMapStart {
 		
 	}
 
-	private static void getRoadsFromFile(RoadMap b) {
+	private static void getRoadsFromFile(RoadMap g) {
 		try {
 			Scanner s2 = new Scanner(new File("src/road_database.txt"));
 			while(s2.hasNextLine()) {
@@ -78,7 +64,7 @@ public class RoadMapStart {
 				}
 				double distance = s2.nextDouble();
 				
-				b.addEdge(b.getNodeFromString(city1), b.getNodeFromString(city2), name, edgetype, distance);
+				g.addEdge(g.getNodeFromString(city1), g.getNodeFromString(city2), name, edgetype, distance);
 				if(s2.hasNextLine()) {
 					s2.nextLine();
 				}

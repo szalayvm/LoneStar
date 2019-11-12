@@ -9,12 +9,14 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
 	private Hashtable<String, Node> referenceTable;
 	public enum NodeType {CITY, LANDMARK, PARK, OTHER};
-	public enum EdgeType {HIGHWAY(75), MAIN_ROAD(65), RURAL_ROAD(55), OTHER(45);
+	public enum EdgeType {HIGHWAY(75, Color.BLUE), MAIN_ROAD(65, Color.GREEN), RURAL_ROAD(55, Color.ORANGE), OTHER(45, Color.RED);
 		private int speedLimit;
+		private Color color;
 		
-		private EdgeType(int speedLimit) {this.speedLimit = speedLimit;}
+		private EdgeType(int speedLimit, Color color) {this.speedLimit = speedLimit; this.color = color;}
 		
 		public int getSpeedLimit() {return speedLimit;}
+		public Color getColor() {return color;}
 	}
 
 	private static final int RADIUS_OF_THE_EARTH = 3959;
