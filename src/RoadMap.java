@@ -123,10 +123,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w, int startingTime) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
-		ComparableNode first =  new ComparableNode(start, 0, h.heuristic(start, end));
+		ComparableNode first =  new ComparableNode(start, 0, h.heuristic(start, end), startingTime);
 		ArrayList<Node> connected = start.getConnectedCities();
 		for(int i = 0; i < connected.size(); i++) {	
-			queue.add(first.createNewBranch(connected.get(i), w.weight(start.connectedRoads.get(i), startingTime), h.heuristic(start.getConnectedCities().get(i), end)));
+			queue.add(first.createNewBranch(connected.get(i), w.weight(start.connectedRoads.get(i), startingTime), h.heuristic(start.getConnectedCities().get(i), end), startingTime + w.weight(start.getConnectedRoads().get(i), startingTime)));
 		}
 		
 		int index = 1;
@@ -138,7 +138,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			Node saveNode = saveCompare.currentPath.get(index);
 			for(int i = 0; i < connected.size(); i++) {
 				if(!saveCompare.currentPath.contains(connected.get(i))){
-					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), w.weight(saveNode.connectedRoads.get(i), startingTime), h.heuristic(saveNode.getConnectedCities().get(i), end));
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), w.weight(saveNode.connectedRoads.get(i), saveCompare.currentTime), h.heuristic(saveNode.getConnectedCities().get(i), end), saveCompare.currentTime);
 					queue.add(addToPath);
 				}
 			}
@@ -321,27 +321,31 @@ public class RoadMap<T extends Comparable<? super T>> {
 		ArrayList<Node> currentPath;
 		Integer cost;
 		Integer heuristic;
+		Integer currentTime;
 		
-		public ComparableNode(Node node, Integer cost, Integer heuristic) {
+		public ComparableNode(Node node, Integer cost, Integer heuristic, Integer startingTime) {
 			this.currentPath = new ArrayList<Node>();
 			currentPath.add(node);
 			this.cost = cost;
 			this.heuristic = heuristic;
+			this.currentTime = startingTime;
 		}
 		
 
-		public ComparableNode(ArrayList<Node> list, Integer cost, Integer heuristic) {
+		public ComparableNode(ArrayList<Node> list, Integer cost, Integer heuristic, Integer newTime) {
 			this.currentPath = list;
 			this.cost = cost;
 			this.heuristic = heuristic;
+			this.currentTime = newTime;
 		}
 		
-		public ComparableNode createNewBranch(Node newCity, Integer cost, Integer heuristic) {
+		public ComparableNode createNewBranch(Node newCity, Integer cost, Integer heuristic, Integer newTime) {
 			ArrayList<Node> newList = new ArrayList<Node>();
 			newList.addAll(this.currentPath);
 			newList.add(newCity);
 			Integer newDistance = this.cost + cost;
-			return new ComparableNode(newList, newDistance, heuristic);
+			Integer newNewTime = this.currentTime + newTime;
+			return new ComparableNode(newList, newDistance, heuristic, newTime);
 		}
 		
 			
