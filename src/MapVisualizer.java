@@ -144,7 +144,7 @@ public class MapVisualizer extends JPanel {
 	}
 
 	public void shortRoute() {
-		GridLayout SRlayout = new GridLayout(8, 0);
+		GridLayout SRlayout = new GridLayout(9, 0);
 
 		JPanel SRPanel = new JPanel();
 		SRPanel.setOpaque(true);
@@ -158,20 +158,25 @@ public class MapVisualizer extends JPanel {
 		JLabel endlabel = this.makeLabel("Ending City:");
 		endlabel.setOpaque(true);
 		endlabel.setBackground(red);
+
 		JLabel timelabel = this.makeLabel("Enter in the military time :");
 
 		JTextField start = this.makeField("Enter Your Starting City");
 		start.addActionListener(new TextFieldListener(start));
-		//start.setBackground(blue);
+		// start.setBackground(blue);
 		JTextField end = this.makeField("Enter Your Ending City");
 		end.setBackground(blue);
 		JTextField time = this.makeField("Enter in the Time of Day");
 		time.setBackground(red);
+		
 
 		JButton SRdistance = new JButton("Find Based on Distance");
 		JButton SRtime = new JButton("Find Based on Time");
+		JButton SRtraff = new JButton("Calculate Based on Traffic");
+		
 		SRdistance.addActionListener(new SRdistanceListener(start, end));
 		SRtime.addActionListener(new SRtimeListener(start, end));
+		SRtraff.addActionListener(new militaryTimeLis(start, end, time));
 
 		SRPanel.add(startlabel);
 		SRPanel.add(start);
@@ -181,6 +186,7 @@ public class MapVisualizer extends JPanel {
 		SRPanel.add(time);
 		SRPanel.add(SRdistance);
 		SRPanel.add(SRtime);
+		SRPanel.add(SRtraff);
 
 		tab.addTab("Shortest Route", SRPanel);
 
@@ -437,6 +443,38 @@ public class MapVisualizer extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			this.o.setText("Possible Cities: \n" + b.searchForCities(this.i.getText()).toString());
+
+		}
+
+	}
+
+	class militaryTimeLis implements ActionListener {
+		public JTextField start;
+		public JTextField end;
+		public JTextField time;
+
+		public militaryTimeLis(JTextField start, JTextField end, JTextField time) {
+			this.start = start;
+			this.end = end;
+			this.time = time;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			RoadMap.Node st = b.getNodeFromString(start.getText());
+			RoadMap.Node e = b.getNodeFromString(end.getText());
+			int num = Integer.parseInt(this.time.getText().trim());
+			int fdigits = num / 60;
+			int ldigits = num % 100;
+			
+
+			if (e != null && st != null) {
+				result = b.findMinTimeAccountingForTraffic(st, e, fdigits * 60 + ldigits);
+				changeNodeColor();
+				repaint();
+			} else {
+				oArea.setText("Your landmark or city was not found. Check your spelling!");
+			}
 
 		}
 
