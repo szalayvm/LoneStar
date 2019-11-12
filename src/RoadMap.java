@@ -9,19 +9,19 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
 	private Hashtable<String, Node> referenceTable;
 	public enum NodeType {CITY, LANDMARK, PARK, OTHER};
-	public enum EdgeType {HIGHWAY, MAIN_ROAD, RURAL_ROAD, OTHER};
-	private final Hashtable<EdgeType, Integer> speedLimits;
-	
+	public enum EdgeType {HIGHWAY(75), MAIN_ROAD(65), RURAL_ROAD(55), OTHER(45);
+		private int speedLimit;
+		
+		private EdgeType(int speedLimit) {this.speedLimit = speedLimit;}
+		
+		public int getSpeedLimit() {return speedLimit;}
+	}
+
 	private static final int RADIUS_OF_THE_EARTH = 3959;
 	
 	public RoadMap() {
 		size = 0;
 		referenceTable = new Hashtable<String, Node>();
-		speedLimits = new Hashtable<EdgeType, Integer>();
-		speedLimits.put(EdgeType.HIGHWAY, 75);
-		speedLimits.put(EdgeType.MAIN_ROAD, 65);
-		speedLimits.put(EdgeType.RURAL_ROAD, 55);
-		speedLimits.put(EdgeType.OTHER, 45);
 	}
 	
 	
@@ -60,20 +60,16 @@ public class RoadMap<T extends Comparable<? super T>> {
 		return edges;
 	}
 		
-	public Node getNodeFromString(String key) throws NullPointerException {
+	public Node getNodeFromString(String key) {
 		Node value = referenceTable.get(key);
-		if(value == null) {
-			System.out.println("City " + key + " is not in the RoadMap.");
-			throw new NullPointerException();
-		}
 		return value;
 	}
 	
-	public double getDistanceFromPath(ArrayList<Node> path) {
+	public int getDistanceFromPath(ArrayList<Node> path) {
 		return pathLength(path, new WeightDistance());
 	}
 	
-	public double getTimeFromPath(ArrayList<Node> path) {
+	public int getTimeFromPath(ArrayList<Node> path) {
 		return pathLength(path, new WeightTime());
 	}
 	
@@ -94,41 +90,41 @@ public class RoadMap<T extends Comparable<? super T>> {
 	}
 	
 	public ArrayList<Node> findMinDistance(Node start, Node end) {
-		return AStar(start, end, new HeuristicDistance(), new WeightDistance());
+		return AStar(start, end, new HeuristicDistance(), new WeightDistance(), -1);
 	}
 	
 	public ArrayList<Node> findMinTime(Node start, Node end) {
-		return AStar(start, end, new HeuristicTime(), new WeightTime());
+		return AStar(start, end, new HeuristicTime(), new WeightTime(), -1);
+	}
+	
+	public ArrayList<Node> findMinTimeAccountingForTraffic(Node start, Node end, int startingTime) {
+		return AStar(start, end, new HeuristicTime(), new WeightTimeAccountingForTraffic(), startingTime);
 	}
 
-	private double pathLength(ArrayList<Node> path, LambdaW w) {
+	private int pathLength(ArrayList<Node> path, LambdaW w) {
 		int length = 0;
 		for(int i = 0; i<path.size() - 1; i++) {
-			length += w.weight(getRoadBetweenCities(path.get(i), path.get(i + 1)));
+			length += w.weight(getRoadBetweenCities(path.get(i), path.get(i + 1)), -1);
 		}
 		return length;
 	}
 	
 	private Edge getRoadBetweenCities(Node node, Node node2) {
-		for(Edge e: node.getConnectedRoads()) {
-			for(Edge e2: node2.getConnectedRoads()) {
-				if(e2.equals(e)) {
-					return e;
-				}
-			}
-		}
-		
+		int index = node.getConnectedCities().indexOf(node2);
+		if(index != -1) {
+			return node.getConnectedRoads().get(index);
+		} 
 		return null;
 	}
 
 
-	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w) {
+	private ArrayList<Node> AStar(Node start, Node end, LambdaH h, LambdaW w, int startingTime) {
 		
 		PriorityQueue<ComparableNode> queue = new PriorityQueue<ComparableNode>(); 
 		ComparableNode first =  new ComparableNode(start, 0, h.heuristic(start, end));
 		ArrayList<Node> connected = start.getConnectedCities();
 		for(int i = 0; i < connected.size(); i++) {	
-			queue.add(first.createNewBranch(connected.get(i), w.weight(start.connectedRoads.get(i)), h.heuristic(start.getConnectedCities().get(i), end)));
+			queue.add(first.createNewBranch(connected.get(i), w.weight(start.connectedRoads.get(i), startingTime), h.heuristic(start.getConnectedCities().get(i), end)));
 		}
 		
 		int index = 1;
@@ -140,7 +136,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			Node saveNode = saveCompare.currentPath.get(index);
 			for(int i = 0; i < connected.size(); i++) {
 				if(!saveCompare.currentPath.contains(connected.get(i))){
-					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), w.weight(saveNode.connectedRoads.get(i)), h.heuristic(saveNode.getConnectedCities().get(i), end));
+					ComparableNode addToPath = saveCompare.createNewBranch(connected.get(i), w.weight(saveNode.connectedRoads.get(i), startingTime), h.heuristic(saveNode.getConnectedCities().get(i), end));
 					queue.add(addToPath);
 				}
 			}
@@ -170,8 +166,8 @@ public class RoadMap<T extends Comparable<? super T>> {
 			for(Edge e : city.getConnectedRoads()) {
 				ArrayList<Node> newPath = new ArrayList<Node>();
 				newPath.addAll(path);
-				if(currentDistance + w.weight(e) <= maxDistance) {
-					addCitiesToPath(newPath, currentDistance + w.weight(e), maxDistance, e.getOtherNode(city), paths, w);
+				if(currentDistance + w.weight(e, -1) <= maxDistance) {
+					addCitiesToPath(newPath, currentDistance + w.weight(e, -1), maxDistance, e.getOtherNode(city), paths, w);
 				} else {
 					paths.add(newPath);
 					break;
@@ -184,13 +180,23 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 	}
 
-	private abstract class LambdaW { public abstract int weight(Edge e); }
+	private abstract class LambdaW { public abstract int weight(Edge e, int time); }
 	
 	private class WeightDistance extends LambdaW { 
-		public int weight(Edge e) { return (int) e.distance; } 
+		public int weight(Edge e, int time) { return (int) e.distance; } 
 	}
 	private class WeightTime extends LambdaW { 
-		public int weight(Edge e) { return (int) e.time; } 
+		public int weight(Edge e, int time) { return (int) e.time; } 
+	}
+	
+	private class WeightTimeAccountingForTraffic extends LambdaW {
+		public int weight(Edge e, int time) { 
+			if(((360 < time % 1440 && time % 1440 < 480) | (1020 < time % 1440 && time % 1440 < 1140)) && e.type.equals(EdgeType.HIGHWAY)) {
+				return (int) (1.5 * e.time);
+			} else {
+				return (int) e.time;
+			}
+		}
 	}
 		
 	private abstract class LambdaH { public abstract int heuristic(Node node1, Node node2); } // Jank
@@ -216,8 +222,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			return new HeuristicDistance().heuristic(node1, node2) * 60 / 75; // TURBO-JANK (also convert to minutes)
 		}
 	}
-	
-	
+		
 	public class Node {
 		private ArrayList<Edge> connectedRoads;
 		
@@ -286,7 +291,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			this.name = name;
 			this.type = type;
 			this.distance = distance;
-			if(this.type != null) this.time = this.distance / speedLimits.get(this.type) * 60; // Minutes
+			this.time = this.distance / this.type.getSpeedLimit() * 60; // Minutes
 		}
 		
 		public Node getOtherNode(Node node) {
