@@ -2,9 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,10 +23,19 @@ public class MapVisualizer extends JPanel {
 	public static final int radius = 25;
 	public ArrayList<RoadMap.Edge> edges;
 	public ArrayList<RoadMap.Node> result;
-	public JTextArea area;
+	public JTextArea oArea;
+	public double shortestTime;
+	public JTextArea sdArea;
+	public JTextArea tArea;
+	public ArrayList<ArrayList<RoadMap.Node>> tpR;
+	public boolean TP;
+	public JTextArea tpArea;
 
 	public MapVisualizer(RoadMap m) {
+		this.TP = false;
+		this.shortestTime = 0;
 		this.result = new ArrayList<RoadMap.Node>();
+		this.tpR = new ArrayList<ArrayList<RoadMap.Node>>();
 		this.setLayout(null);
 		this.w = 900;
 		this.h = 900;
@@ -41,21 +48,43 @@ public class MapVisualizer extends JPanel {
 		this.shortRoute();
 		this.searcher();
 		this.tab.setSize(w / 2, h / 2);
-		this.tab.setLocation(200, 100);
+		this.tab.setLocation(10, 100);
 		this.add(tab, BorderLayout.SOUTH);
-		this.area = new JTextArea();
-		this.area.setSize(500, 500);
-		this.area.setLocation(3 * w / 4, 80);
-		this.area.setLineWrap(true);
-		area.setWrapStyleWord(true);
-		this.add(this.area);
+		
+
+		this.sdArea = new JTextArea();
+		this.sdArea.setSize(500, 150);
+		this.sdArea.setLocation(10 + w / 2 + 10, 80);
+
+		this.tArea = new JTextArea();
+		this.tArea.setSize(500, 150);
+		this.tArea.setLocation(10 + w / 2 + 10, 80 + 150);
+
+		this.oArea = new JTextArea();
+		this.oArea.setSize(500, 150);
+		this.oArea.setLocation(3 * w / 4, 80);
+
+		this.tpArea = new JTextArea();
+		this.tpArea.setSize(500, 150);
+		this.tpArea.setLocation(3 * w / 4, 150 + 80);
+
+		this.oArea.setLineWrap(true);
+		this.oArea.setWrapStyleWord(true);
+		this.tpArea.setLineWrap(true);
+		this.tpArea.setWrapStyleWord(true);
+
+		this.add(this.oArea);
+		this.add(this.sdArea);
+		this.add(this.tArea);
+		this.add(this.tpArea);
+		
 	}
 
 	public void makeTitle() {
 		JLabel titleText = new JLabel("Lone Star Traversal");
-		titleText.setLocation(w / 2 - 100, -h / 2 + 50);
+		titleText.setLocation(1500 / 2 - 75, -h / 2 + 50);
 		titleText.setSize(w, h);
-		titleText.setFont(new Font("Freestyle Script", 1, 30));
+		titleText.setFont(new Font("Freestyle Script", 1, 38));
 
 		this.add(titleText);
 	}
@@ -66,9 +95,9 @@ public class MapVisualizer extends JPanel {
 		JLabel startlabel = this.makeLabel("Starting City: ");
 		JLabel endlabel = this.makeLabel("Ending City:");
 		JTextField start = this.makeField("Enter Your Starting City");
-		JLabel timeLabel = this.makeLabel("Time: ");
+		JLabel timeLabel = this.makeLabel("Time (hours): ");
 		JTextField time = this.makeField("0");
-		JLabel distanceLabel = this.makeLabel("Distance: ");
+		JLabel distanceLabel = this.makeLabel("Distance (miles): ");
 		JTextField distance = this.makeField("0");
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
@@ -132,14 +161,9 @@ public class MapVisualizer extends JPanel {
 
 	}
 
-	public enum TextAlignment {
-		Top_LEFT, Top,
-	}
-
 	@Override
 	public void paintComponent(Graphics g) {// Bottom right is Galv
-
-		Graphics2D g2 = (Graphics2D) g;
+		
 		super.paintComponent(g);
 		this.setBackground(Color.WHITE);
 		int d = 30;
@@ -185,26 +209,84 @@ public class MapVisualizer extends JPanel {
 
 		}
 
-		Rectangle bound = new Rectangle(3 * w / 4, 80, 200, 200);
-		g.setFont(new Font("Times New Roman", 1, 20));
+		Font f = new Font("Times New Roman", 1, 18);
 
-		this.area.setText("Optimal Path: \n" + result.toString());
-		this.area.setFont(new Font("Times New Roman", 1, 15));
+		this.oArea.setFont(f);
+		this.tpArea.setFont(f);
+		this.tArea.setFont(f);
+		this.sdArea.setFont(f);
+
+		if (tpR.size() > 5) {
+			this.tpArea.setText("Possible Paths: \n" + tpR.subList(0, 5).toString());
+		} else
+			this.tpArea.setText("Possible Paths: \n" + tpR.toString());
+
+		this.oArea.setText("Optimal Path: \n" + result.toString());
+
+		this.sdArea.setText("Distance: \n" + b.getDistanceFromPath(result) + " miles");
+
+		double ht = (int) b.getTimeFromPath(result) / 60;
+		double mt = b.getTimeFromPath(result) - ht * 60;
+		this.tArea.setText("Time: \n" + ht + " hours " + mt + " minutes");
+
+		if (TP == true) {
+			this.tArea.setText("Time: \n" + 0 + " hours " + 0.0 + " minutes");
+			this.oArea.setText("Optimal Path: \n" + "[]");
+
+			this.sdArea.setText("Distance: \n" + 0.0 + " miles");
+
+		}
+		TP = false;
+		result.clear();
+		setNodeBlack();
+		setTPBlack();
+		tpR.clear();
 
 	}
 
 	public JLabel makeLabel(String s) {
-		// JLabel startlabel = new JLabel();
-		//
-		// startlabel.setBackground(Color.cyan);
+
 		return new JLabel(s);
-		// JLabel endlabel = new JLabel("Ending City: ");
-		// endlabel.setBackground(new Color(153, 255, 102));
 
 	}
 
 	public JTextField makeField(String s) {
 		return new JTextField(s);
+	}
+
+	public void changeNodeColor() {
+		if (!result.isEmpty()) {
+			for (RoadMap.Node n : result) {
+				n.setColor(Color.RED);
+			}
+		}
+	}
+
+	public void setNodeBlack() {
+		for (RoadMap.Node n : result) {
+			n.setColor(Color.BLACK);
+		}
+
+	}
+
+	public void setTPRed() {
+		if (!tpR.isEmpty()) {
+			for (ArrayList<RoadMap.Node> a : tpR) {
+				for (RoadMap.Node n : a) {
+					n.setColor(Color.RED);
+				}
+			}
+		}
+	}
+
+	public void setTPBlack() {
+		if (!tpR.isEmpty()) {
+			for (ArrayList<RoadMap.Node> a : tpR) {
+				for (RoadMap.Node n : a) {
+					n.setColor(Color.BLACK);
+				}
+			}
+		}
 	}
 
 	// make null checks on buttons
@@ -223,12 +305,18 @@ public class MapVisualizer extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 
-			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
-			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
+			RoadMap.Node endNode = b.getNodeFromString(this.end.getText().trim());
 
-			result = b.findMinDistance(startNode, endNode);
-			repaint();
+			if (startNode != null && endNode != null) {
+				result = b.findMinDistance(startNode, endNode);
+				changeNodeColor();
+				repaint();
+			} else {
+				oArea.setText("Your landmark or city was not found. Check your spelling!");
+			}
 		}
+
 	}
 
 	class SRtimeListener implements ActionListener {
@@ -242,11 +330,15 @@ public class MapVisualizer extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 
-			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
-			RoadMap.Node endNode = b.getNodeFromString(this.end.getText());
-
-			result = b.findMinTime(startNode, endNode);
-			repaint();
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
+			RoadMap.Node endNode = b.getNodeFromString(this.end.getText().trim());
+			if (startNode != null && endNode != null) {
+				result = b.findMinTime(startNode, endNode);
+				changeNodeColor();
+				repaint();
+			} else {
+				oArea.setText("Your landmark or city was not found. Check your spelling!");
+			}
 		}
 	}
 
@@ -260,12 +352,19 @@ public class MapVisualizer extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			TP = true;
 
-			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
-			int timenum = Integer.parseInt(this.time.getText());
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
+			int timenum = Integer.parseInt(this.time.getText().trim());
+			if (startNode != null) {
 
-			result = b.getNearCitiesToTime(startNode, timenum);
-			repaint();
+				tpR = b.getNearCitiesToTime(startNode, timenum * 60);
+				setTPRed();
+				repaint();
+			} else {
+				oArea.setText("Your landmark or city was not found. Check your spelling!");
+			}
+
 		}
 	}
 
@@ -282,12 +381,20 @@ public class MapVisualizer extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			TP = true;
 
-			RoadMap.Node startNode = b.getNodeFromString(this.start.getText());
-			int distancenum = Integer.parseInt(this.distance.getText());
+			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
 
-			result = b.getNearCitiesToDistance(startNode, distancenum);
-			repaint();
+			int distancenum = Integer.parseInt(this.distance.getText().trim());
+			if (startNode != null) {
+				tpR = b.getNearCitiesToDistance(startNode, distancenum);
+				setTPRed();
+				repaint();
+			} else {
+				oArea.setText("Your landmark or city was not found. Check your spelling!");
+			}
+
 		}
 	}
+	
 }
