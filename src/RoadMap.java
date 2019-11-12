@@ -78,7 +78,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	public ArrayList<String> searchForCities(String input) {
 		ArrayList<String> matches = new ArrayList<String>();
 		
-		for(String s: referenceTable.keySet()) if(s.contains(input)) matches.add(s);
+		for(String s: referenceTable.keySet()) if(s.toLowerCase().contains(input.toLowerCase())) matches.add(s);
 		
 		return matches;
 	}
