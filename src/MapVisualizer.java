@@ -7,12 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 public class MapVisualizer extends JPanel {
 	public RoadMap b;
@@ -32,6 +34,8 @@ public class MapVisualizer extends JPanel {
 	public JTextArea tpArea;
 	public Color red = new Color(222, 70, 70);
 	public Color blue = new Color(69, 126, 216);
+	public Border textborder = BorderFactory.createCompoundBorder();
+	public Border border = BorderFactory.createRaisedBevelBorder();
 
 	public MapVisualizer(RoadMap m) {
 		this.TP = false;
@@ -92,20 +96,37 @@ public class MapVisualizer extends JPanel {
 
 	private void tripPlanner() {
 		GridLayout TPlayout = new GridLayout(4, 2);
+		
 
 		JLabel startlabel = this.makeLabel("Starting City: ");
-		JLabel endlabel = this.makeLabel("Ending City:");
+		startlabel.setOpaque(true);
+		startlabel.setBackground(new Color(67, 130, 231));
+		//JLabel endlabel = this.makeLabel("Ending City:");
+		//endlabel.setOpaque(true);
+		//endlabel.setBackground(new Color(72, 79, 202));
 		JTextField start = this.makeField("Enter Your Starting City");
+		start.setBackground(new Color(67, 130, 231));
+		//start.setBorder(border);
 		JLabel timeLabel = this.makeLabel("Time (hours): ");
+		timeLabel.setOpaque(true);
+		timeLabel.setBackground(new Color(52, 68, 238));
 		JTextField time = this.makeField("0");
+		time.setBackground(new Color(114, 131, 218));
 		JLabel distanceLabel = this.makeLabel("Distance (miles): ");
+		distanceLabel.setOpaque(true);
+		distanceLabel.setBackground(new Color(52, 68, 238));
 		JTextField distance = this.makeField("0");
+		distance.setBackground(new Color(114, 131, 218));
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
 
 		timeButton.addActionListener(new TPtimeListener(start, time));
 		distanceButton.addActionListener(new TPdistanceListener(start, distance));
 
+		start.setBorder(border);
+		distance.setBorder(border);
+		time.setBorder(border);
+		
 		JPanel TPPanel = new JPanel();
 		TPPanel.setOpaque(true);
 		TPPanel.setBackground(Color.white);
@@ -127,11 +148,13 @@ public class MapVisualizer extends JPanel {
 	private void searcher() {
 		GridLayout searchG = new GridLayout(2, 0);
 		JTextField searcher = new JTextField("Enter in a character and see which city you want!");
+		searcher.setBackground(blue);
 
 		JPanel searchP = new JPanel();
 		JTextArea output = new JTextArea("Possible Cities: ");
 		output.setLineWrap(true);
 		output.setWrapStyleWord(true);
+		output.setBackground(red);
 
 		searcher.addActionListener(new cityListener(searcher, output));
 		searchP.setLayout(searchG);
@@ -171,13 +194,23 @@ public class MapVisualizer extends JPanel {
 		
 
 		JButton SRdistance = new JButton("Find Based on Distance");
+		SRdistance.setBackground(red);
 		JButton SRtime = new JButton("Find Based on Time");
+		SRtime.setBackground(new Color(255,255,255));
 		JButton SRtraff = new JButton("Calculate Based on Traffic");
+		SRtraff.setBackground(blue);
 		
 		SRdistance.addActionListener(new SRdistanceListener(start, end));
 		SRtime.addActionListener(new SRtimeListener(start, end));
 		SRtraff.addActionListener(new militaryTimeLis(start, end, time));
 
+		start.setBorder(textborder);
+		end.setBorder(textborder);
+		time.setBorder(textborder);
+		SRdistance.setBorder(border);
+		SRtime.setBorder(border);
+		SRtraff.setBorder(border);
+		
 		SRPanel.add(startlabel);
 		SRPanel.add(start);
 		SRPanel.add(endlabel);
