@@ -25,6 +25,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private static final int RUSH_HOUR_END = 480;
 	private static final int RUSH_HOUR_START_2 = 1020;
 	private static final int RUSH_HOUR_END_2 = 1140;
+	private static final int MINUTES_IN_A_DAY = 1440;
 	
 	public RoadMap() {
 		size = 0;
@@ -198,7 +199,46 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private class WeightTimeAccountingForTraffic extends LambdaW {
 		public int weight(Edge e, int time) { 
-			return 0;
+			int t = (int) e.time;
+			int d = (int) e.distance;
+			int t1;
+			
+			boolean startInTraffic = false;
+			boolean endInTraffic = false;
+			
+			if((RUSH_HOUR_START <= time % MINUTES_IN_A_DAY && RUSH_HOUR_END >= time % MINUTES_IN_A_DAY) | 
+					(RUSH_HOUR_START_2 <= time % MINUTES_IN_A_DAY && RUSH_HOUR_END_2 >= time % MINUTES_IN_A_DAY)) {
+				startInTraffic = true;
+			}
+			
+			if(startInTraffic == true) {
+				if((RUSH_HOUR_START <= (time + 2*t) % MINUTES_IN_A_DAY && RUSH_HOUR_END >= (time + 2*t) % MINUTES_IN_A_DAY) | 
+						(RUSH_HOUR_START_2 <= (time + 2*t) % MINUTES_IN_A_DAY && RUSH_HOUR_END_2 >= (time + 2*t) % MINUTES_IN_A_DAY)) {
+					endInTraffic = true;
+				}
+			} else {
+				if((RUSH_HOUR_START <= (time + t) % MINUTES_IN_A_DAY && RUSH_HOUR_END >= (time + t) % MINUTES_IN_A_DAY) | 
+						(RUSH_HOUR_START_2 <= (time + t) % MINUTES_IN_A_DAY && RUSH_HOUR_END_2 >= (time + t) % MINUTES_IN_A_DAY)) {
+					endInTraffic = true;
+				}
+			}
+			
+			if((!startInTraffic && !endInTraffic) | !e.type.equals(EdgeType.HIGHWAY)) {
+				return time + t;
+			}
+			
+			if(!startInTraffic && endInTraffic) {
+				t1 = Math.min(RUSH_HOUR_START, RUSH_HOUR_START_2) - (time % MINUTES_IN_A_DAY);
+				return time + t1 + 2 * (60 * d / e.type.speedLimit - t1);
+			}
+			
+			if(!endInTraffic && startInTraffic) {
+				t1 = Math.min(RUSH_HOUR_END, RUSH_HOUR_END_2)- (time % MINUTES_IN_A_DAY);
+				return time + t1 + (60 * d / e.type.speedLimit - t1/2);
+			}
+			
+			return time + 2 * t; // In Rush Hour the entire time
+
 		}
 	}
 		
@@ -310,8 +350,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 			
 			if((firstNode.equals(o.firstNode) && secondNode.equals(o.secondNode)) | (firstNode.equals(o.secondNode) && secondNode.equals(o.firstNode))) {
 				return 0;
-			}
+			} else if (this.name.length() > o.name.length()) {
+				return 1;
+			} else {
 			return -1;
+			}
 		}
 	}
 	

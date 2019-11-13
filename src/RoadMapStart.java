@@ -9,9 +9,7 @@ public class RoadMapStart {
 		RoadMap g = new RoadMap();		
 		getLocationsFromFile(g);
 		getRoadsFromFile(g);
-		GUIFrame.create(g);		
-		
-		System.out.println(g.getAllEdges());
+		GUIFrame.create(g);
 	}
 
 	private static void getLocationsFromFile(RoadMap g) {
