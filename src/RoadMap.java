@@ -13,7 +13,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 		private int speedLimit;
 		private Color color;
 		
-		private EdgeType(int speedLimit, Color color) {this.speedLimit = speedLimit; this.color = color;}
+		private EdgeType(int speedLimit, Color color) {
+			this.speedLimit = speedLimit; 
+			this.color = color;
+		}
 		
 		public int getSpeedLimit() {return speedLimit;}
 		public Color getColor() {return color;}
@@ -188,7 +191,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 	}
 
-	private abstract class LambdaW { public abstract int weight(Edge e, int time); }
+	private abstract class LambdaW { public abstract int weight(Edge e, int time); } // Jank
 	
 	private class WeightDistance extends LambdaW { 
 		public int weight(Edge e, int time) { return (int) e.distance; } 
@@ -229,11 +232,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 			
 			if(!startInTraffic && endInTraffic) {
 				t1 = Math.min(RUSH_HOUR_START, RUSH_HOUR_START_2) - (time % MINUTES_IN_A_DAY);
-				return time + t1 + 2 * (60 * d / e.type.speedLimit - t1);
+				return time + t1 + 2 * (60 * d / e.type.speedLimit - t1); // Starting time + time spent on the road before hitting rush hour + time spent on the road after hitting rush hour
 			}
 			
 			if(!endInTraffic && startInTraffic) {
-				t1 = Math.min(RUSH_HOUR_END, RUSH_HOUR_END_2)- (time % MINUTES_IN_A_DAY);
+				t1 = Math.min(RUSH_HOUR_END, RUSH_HOUR_END_2) - (time % MINUTES_IN_A_DAY);
 				return time + t1 + (60 * d / e.type.speedLimit - t1/2);
 			}
 			
@@ -242,7 +245,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 	}
 		
-	private abstract class LambdaH { public abstract int heuristic(Node node1, Node node2); } // Jank
+	private abstract class LambdaH { public abstract int heuristic(Node node1, Node node2); }
 	
 	private class HeuristicDistance extends LambdaH {
 		public int heuristic(Node node1, Node node2) {
@@ -262,7 +265,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private class HeuristicTime extends LambdaH {
 		public int heuristic(Node node1, Node node2) {
-			return new HeuristicDistance().heuristic(node1, node2) * 60 / 75; // TURBO-JANK (also convert to minutes)
+			return new HeuristicDistance().heuristic(node1, node2) * 60 / EdgeType.HIGHWAY.speedLimit; // TURBO-JANK (also convert to minutes)
 		}
 	}
 		
