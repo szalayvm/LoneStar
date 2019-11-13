@@ -307,7 +307,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 		@Override
 		public int compareTo(Edge o) {
-			if(name.equals(o.name)) {
+			if((firstNode.equals(o.firstNode) && secondNode.equals(o.secondNode)) | (firstNode.equals(o.secondNode) && secondNode.equals(o.firstNode))) {
 				return 0;
 			}
 			return -1;
