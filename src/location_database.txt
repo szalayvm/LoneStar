@@ -44,4 +44,3 @@ Bitter Lake N. Wildlife Ref.
 Landmark 33.4560 104.4017
 Lubbock
 City 33.5779 101.8552
-
