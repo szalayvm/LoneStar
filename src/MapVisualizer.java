@@ -98,13 +98,13 @@ public class MapVisualizer extends JPanel {
 		GridLayout TPlayout = new GridLayout(4, 2);
 		
 
-		JLabel startlabel = this.makeLabel("Starting City: ");
+		JLabel startlabel = this.makeLabel("Starting Location: ");
 		startlabel.setOpaque(true);
 		startlabel.setBackground(new Color(67, 130, 231));
 		//JLabel endlabel = this.makeLabel("Ending City:");
 		//endlabel.setOpaque(true);
 		//endlabel.setBackground(new Color(72, 79, 202));
-		JTextField start = this.makeField("Enter Your Starting City");
+		JTextField start = this.makeField("Enter Your Starting Location");
 		start.setBackground(new Color(67, 130, 231));
 		//start.setBorder(border);
 		JLabel timeLabel = this.makeLabel("Time (hours): ");
@@ -147,11 +147,11 @@ public class MapVisualizer extends JPanel {
 
 	private void searcher() {
 		GridLayout searchG = new GridLayout(2, 0);
-		JTextField searcher = new JTextField("Enter in a character and see which city you want!");
+		JTextField searcher = new JTextField("Enter in a character and see which location you want!");
 		searcher.setBackground(blue);
 
 		JPanel searchP = new JPanel();
-		JTextArea output = new JTextArea("Possible Cities: ");
+		JTextArea output = new JTextArea("Possible Locations: ");
 		output.setLineWrap(true);
 		output.setWrapStyleWord(true);
 		output.setBackground(red);
@@ -162,7 +162,7 @@ public class MapVisualizer extends JPanel {
 		searchP.add(searcher);
 		searchP.add(output);
 
-		this.tab.addTab("City Searcher", searchP);
+		this.tab.addTab("Location Searcher", searchP);
 
 	}
 
@@ -175,19 +175,19 @@ public class MapVisualizer extends JPanel {
 		SRPanel.setSize(200, 200);
 		SRPanel.setLayout(SRlayout);
 
-		JLabel startlabel = this.makeLabel("Starting City: ");
+		JLabel startlabel = this.makeLabel("Starting Location: ");
 		startlabel.setOpaque(true);
 		startlabel.setBackground(blue);
-		JLabel endlabel = this.makeLabel("Ending City:");
+		JLabel endlabel = this.makeLabel("Ending Location:");
 		endlabel.setOpaque(true);
 		endlabel.setBackground(red);
 
 		JLabel timelabel = this.makeLabel("Enter in the military time :");
 
-		JTextField start = this.makeField("Enter Your Starting City");
+		JTextField start = this.makeField("Enter Your Starting Location");
 		start.addActionListener(new TextFieldListener(start));
 		// start.setBackground(blue);
-		JTextField end = this.makeField("Enter Your Ending City");
+		JTextField end = this.makeField("Enter Your Ending Location");
 		end.setBackground(blue);
 		JTextField time = this.makeField("Enter in the Time of Day");
 		time.setBackground(red);
