@@ -28,3 +28,20 @@ Beaumont
 City 30.0802 94.1266
 Brownsville
 City 25.9017 97.4975
+Big Bend NP
+Landmark 29.1275 103.2425
+Del Rio
+Landmark 29.3709 100.8959
+Monahans Sandhills SP
+Landmark 31.618795 102.812112
+Guadalupe Mountains NP
+Landmark 31.9452 104.8725
+Marfa
+City 30.3095 104.0206
+Van Horn
+City 31.0399 104.8308
+Bitter Lake N. Wildlife Ref.
+Landmark 33.4560 104.4017
+Lubbock
+City 33.5779 101.8552
+

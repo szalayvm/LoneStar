@@ -94,3 +94,111 @@ Hwy10
 Beaumont
 Houston
 Highway 84.6
+US385
+Big Bend NP
+Monahans Sandhills SP
+MainRoad 153
+US90
+Marfa
+Big Bend NP
+MainRoad 98.2
+US90
+Del Rio
+Big Bend NP
+MainRoad 214
+US277
+San Angelo
+Del Rio
+MainRoad 156
+US277
+Del Rio
+Laredo
+MainRoad 179
+US90
+Marfa
+Van Horn
+MainRoad 73.6
+Hwy10
+Van Horn
+El Paso
+Highway 121
+US180
+El Paso
+Guadalupe Mountains NP
+MainRoad 113
+Hwy285
+Bitter Lake N. Wildlife Ref.
+Guadalupe Mountains NP
+Highway 136
+US70
+El Paso
+Bitter Lake N. Wildlife Ref.
+MainRoad 216
+US70
+Bitter Lake N. Wildlife Ref.
+Amarillo
+MainRoad 211
+US380
+Lubbock
+Bitter Lake N. Wildlife Ref.
+MainRoad 179
+Hwy127
+Amarillo
+Lubbock
+Highway 124
+US84
+San Angelo
+Lubbock
+MainRoad 183
+Hwy20
+Lubbock
+Monahans Sandhills SP
+Highway 171
+Hwy20
+Fort Worth
+Lubbock
+Highway 314
+US287
+Fort Worth
+Amarillo
+MainRoad 339
+US124
+Beaumont
+Galveston
+MainRoad 77.3
+Hwy6
+Waco
+Houston
+Highway 185
+Hwy45
+Houston
+Dallas
+Highway 239
+US380
+Bitter Lake N. Wildlife Ref.
+Monahans Sandhills SP
+MainRoad 211
+US70
+Amarillo
+Bitter Lake N. Wildlife Ref.
+MainRoad 211
+US90
+Guadalupe Mountains NP
+Big Bend NP
+MainRoad 235
+US90
+San Antonio
+Del Rio
+MainRoad 158
+US67
+San Angelo
+Big Bend NP
+MainRoad 264
+US90
+Del Rio
+Monahans Sandhills SP
+MainRoad 240
+US67
+Marfa
+Monahans Sandhills SP
+MainRoad 139

@@ -21,6 +21,11 @@ public class RoadMap<T extends Comparable<? super T>> {
 
 	private static final int RADIUS_OF_THE_EARTH = 3959;
 	
+	private static final int RUSH_HOUR_START = 360;
+	private static final int RUSH_HOUR_END = 480;
+	private static final int RUSH_HOUR_START_2 = 1020;
+	private static final int RUSH_HOUR_END_2 = 1140;
+	
 	public RoadMap() {
 		size = 0;
 		referenceTable = new Hashtable<String, Node>();
@@ -193,11 +198,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	
 	private class WeightTimeAccountingForTraffic extends LambdaW {
 		public int weight(Edge e, int time) { 
-			if(((360 < time % 1440 && time % 1440 < 480) | (1020 < time % 1440 && time % 1440 < 1140)) && e.type.equals(EdgeType.HIGHWAY)) {
-				return (int) (1.5 * e.time);
-			} else {
-				return (int) e.time;
-			}
+			return 0;
 		}
 	}
 		
