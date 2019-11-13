@@ -307,13 +307,10 @@ public class RoadMap<T extends Comparable<? super T>> {
 		}
 		@Override
 		public int compareTo(Edge o) {
-			if(this.distance > o.distance) {
-				return 1;
-			} else if (this.distance < o.distance) {
-				return -1;
-			} else {
+			if(name.equals(o.name)) {
 				return 0;
 			}
+			return -1;
 		}
 	}
 	

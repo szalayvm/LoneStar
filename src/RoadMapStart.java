@@ -10,6 +10,8 @@ public class RoadMapStart {
 		getLocationsFromFile(g);
 		getRoadsFromFile(g);
 		GUIFrame.create(g);		
+		
+		System.out.println(g.getAllEdges());
 	}
 
 	private static void getLocationsFromFile(RoadMap g) {
