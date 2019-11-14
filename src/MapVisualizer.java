@@ -19,32 +19,27 @@ import javax.swing.border.Border;
 public class MapVisualizer extends JPanel {
 	public RoadMap b;
 	public ArrayList<RoadMap.Node> cities;
-	public int w;
-	public int h;
+	public int w = 900;
+	public int h = 900;
 	public JTabbedPane tab;
 	public static final int radius = 25;
 	public ArrayList<RoadMap.Edge> edges;
-	public ArrayList<RoadMap.Node> result;
+	public ArrayList<RoadMap.Node> result =  new ArrayList<RoadMap.Node>();;
 	public JTextArea oArea;
-	public double shortestTime;
+	public double shortestTime = 0;
 	public JTextArea sdArea;
 	public JTextArea tArea;
-	public ArrayList<ArrayList<RoadMap.Node>> tpR;
-	public boolean TP;
+	public ArrayList<ArrayList<RoadMap.Node>> tpR = new ArrayList<ArrayList<RoadMap.Node>>();
+	public boolean TP = false;
 	public JTextArea tpArea;
 	public Color red = new Color(222, 70, 70);
 	public Color blue = new Color(69, 126, 216);
 	public Border textborder = BorderFactory.createCompoundBorder();
 	public Border border = BorderFactory.createRaisedBevelBorder();
 
+	//This constructs the map, setting the size of the text feilds on the map, setting up the tabs, and calling other methods to set up other parts on the map
 	public MapVisualizer(RoadMap m) {
-		this.TP = false;
-		this.shortestTime = 0;
-		this.result = new ArrayList<RoadMap.Node>();
-		this.tpR = new ArrayList<ArrayList<RoadMap.Node>>();
 		this.setLayout(null);
-		this.w = 900;
-		this.h = 900;
 		this.b = m;
 		this.cities = m.getAllCities();
 		this.edges = m.getAllEdges();
@@ -85,6 +80,7 @@ public class MapVisualizer extends JPanel {
 
 	}
 
+	//This method makes the title appears at the right location on the GUI
 	public void makeTitle() {
 		JLabel titleText = new JLabel("Lone Star Traversal");
 		titleText.setLocation(1500 / 2 - 75, -h / 2 + 50);
@@ -94,6 +90,7 @@ public class MapVisualizer extends JPanel {
 		this.add(titleText);
 	}
 
+	//This method makes the trip planner tab work. It sets up the text fields and buttons, and it calls the methods to give the buttons functionality
 	private void tripPlanner() {
 		GridLayout TPlayout = new GridLayout(4, 2);
 		
@@ -101,12 +98,8 @@ public class MapVisualizer extends JPanel {
 		JLabel startlabel = this.makeLabel("Starting Location: ");
 		startlabel.setOpaque(true);
 		startlabel.setBackground(new Color(67, 130, 231));
-		//JLabel endlabel = this.makeLabel("Ending City:");
-		//endlabel.setOpaque(true);
-		//endlabel.setBackground(new Color(72, 79, 202));
 		JTextField start = this.makeField("Enter Your Starting Location");
 		start.setBackground(new Color(67, 130, 231));
-		//start.setBorder(border);
 		JLabel timeLabel = this.makeLabel("Time (hours): ");
 		timeLabel.setOpaque(true);
 		timeLabel.setBackground(new Color(52, 68, 238));
@@ -123,7 +116,7 @@ public class MapVisualizer extends JPanel {
 		timeButton.addActionListener(new TPtimeListener(start, time));
 		distanceButton.addActionListener(new TPdistanceListener(start, distance));
 
-		start.setBorder(border);
+		start.setBorder(border); 
 		distance.setBorder(border);
 		time.setBorder(border);
 		
@@ -145,6 +138,9 @@ public class MapVisualizer extends JPanel {
 
 	}
 
+	//This method makes the search tab work.
+	//It sets up two text fields, one for the input and one for the output
+	//It also calls the methods to give the text fields functionality
 	private void searcher() {
 		GridLayout searchG = new GridLayout(2, 0);
 		JTextField searcher = new JTextField("Enter in a character and see which location you want!");
@@ -328,13 +324,13 @@ public class MapVisualizer extends JPanel {
 	}
 
 	public void setNodeBlack() {
-
 		for (RoadMap.Node n : result) {
 			n.setColor(Color.BLACK);
 		}
 
 	}
 
+	//This following two methods can set the colors of the nodes
 	public void setTPRed() {
 		if (!tpR.isEmpty()) {
 			for (ArrayList<RoadMap.Node> a : tpR) {
@@ -355,8 +351,8 @@ public class MapVisualizer extends JPanel {
 		}
 	}
 
-	// make null checks on buttons
-
+	//This method gives the calculate based on distance button in the Shortest Route tab functionality
+	//It calls the findMinDistance method from roadmap
 	class SRdistanceListener implements ActionListener {
 		JTextField start;
 		JTextField end;
@@ -385,6 +381,8 @@ public class MapVisualizer extends JPanel {
 
 	}
 
+	//This methods gives to calculate based on time button in the Shortest Route tab functionality
+	//Its calls the findMinTime method from roadmap
 	class SRtimeListener implements ActionListener {
 		JTextField start;
 		JTextField end;
@@ -408,6 +406,8 @@ public class MapVisualizer extends JPanel {
 		}
 	}
 
+	//This method gives the calculate based on time button in Trip Planner functionality
+	//It calls the getNearCitesToTime method from roadmap
 	class TPtimeListener implements ActionListener {
 		JTextField start;
 		JTextField time;
@@ -419,7 +419,6 @@ public class MapVisualizer extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			TP = true;
-
 			RoadMap.Node startNode = b.getNodeFromString(this.start.getText().trim());
 			int timenum = Integer.parseInt((this.time.getText().trim()));
 			if (startNode != null) {
@@ -430,10 +429,11 @@ public class MapVisualizer extends JPanel {
 			} else {
 				oArea.setText("Your landmark or city was not found. Check your spelling!");
 			}
-
 		}
 	}
 
+	//This method gives the calculate based on distance button in Trip Planner functionality
+	//It calls the getNearCitiesToDistance function from roadmap
 	class TPdistanceListener implements ActionListener {
 		JTextField start;
 		JTextField distance;
@@ -459,10 +459,11 @@ public class MapVisualizer extends JPanel {
 			} else {
 				oArea.setText("Your landmark or city was not found. Check your spelling!");
 			}
-
 		}
 	}
 
+	//This method gives the location searcher tab functionality
+	//It calls the searchForCities method from roadmap
 	class cityListener implements ActionListener {
 		public JTextField i;
 		public JTextArea o;
@@ -476,11 +477,11 @@ public class MapVisualizer extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			this.o.setText("Possible Cities: \n" + b.searchForCities(this.i.getText()).toString());
-
 		}
-
 	}
 
+	//This method gives the button to calculate based on traffic functionality.
+	//It class the findMinTimeAccountingForTraffic method from roadmap
 	class militaryTimeLis implements ActionListener {
 		public JTextField start;
 		public JTextField end;
@@ -508,9 +509,6 @@ public class MapVisualizer extends JPanel {
 			} else {
 				oArea.setText("Your landmark or city was not found. Check your spelling!");
 			}
-
 		}
-
 	}
-
 }
