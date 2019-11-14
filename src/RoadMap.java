@@ -4,7 +4,6 @@ import java.util.Hashtable;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 
-
 public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
 	private Hashtable<String, Node> referenceTable;
@@ -237,7 +236,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 			
 			if(!endInTraffic && startInTraffic) {
 				t1 = Math.min(RUSH_HOUR_END, RUSH_HOUR_END_2) - (time % MINUTES_IN_A_DAY);
-				return time + t1 + (60 * d / e.type.speedLimit - t1/2);
+				return time + t1 + (60 * d / e.type.speedLimit - t1/2); // Ditto
 			}
 			
 			return time + 2 * t; // In Rush Hour the entire time
@@ -353,10 +352,8 @@ public class RoadMap<T extends Comparable<? super T>> {
 			
 			if((firstNode.equals(o.firstNode) && secondNode.equals(o.secondNode)) | (firstNode.equals(o.secondNode) && secondNode.equals(o.firstNode))) {
 				return 0;
-			} else if (this.name.length() > o.name.length()) {
-				return 1;
 			} else {
-			return -1;
+				return -1;
 			}
 		}
 	}
