@@ -9,7 +9,7 @@ public class RoadMap<T extends Comparable<? super T>> {
 	private int size;
 	private Hashtable<String, Node> referenceTable;
 	public enum NodeType {CITY, LANDMARK, PARK, OTHER};
-	public enum EdgeType {HIGHWAY(75, Color.BLUE), MAIN_ROAD(65, Color.GREEN), RURAL_ROAD(55, Color.ORANGE), OTHER(45, Color.RED);
+	public enum EdgeType {HIGHWAY(75, Color.BLUE), MAIN_ROAD(55, Color.GREEN), RURAL_ROAD(55, Color.ORANGE), OTHER(45, Color.RED);
 		private int speedLimit;
 		private Color color;
 		

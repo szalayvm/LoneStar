@@ -75,9 +75,9 @@ Austin
 San Angelo
 Highway 205
 Hwy10
-El Paso
+Van Horn
 San Angelo
-Highway 404
+Highway 283
 Hwy55
 Laredo
 San Angelo
@@ -202,3 +202,19 @@ US67
 Marfa
 Monahans Sandhills SP
 MainRoad 139
+US183N
+Victoria
+Austin
+MainRoad 126
+TX119W
+Victoria
+San Antonio
+MainRoad 117
+US285S
+Guadalupe Mountains NP
+Monahans Sandhills SP
+Highway 139
+US87N
+San Angelo
+Monahans Sandhills SP
+MainRoad 162
