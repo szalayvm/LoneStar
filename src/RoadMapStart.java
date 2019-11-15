@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class RoadMapStart {
 	
+	//The main method creates a road map, gets the locatations and roads from a file, and creates the GUI frame
 	public static void main(String[] args) throws IOException {
 		RoadMap g = new RoadMap();		
 		getLocationsFromFile(g);
@@ -12,6 +13,7 @@ public class RoadMapStart {
 		GUIFrame.create(g);
 	}
 
+	//This method takes in a road map and scans a file for the location type and location and stores them to the roadmap.
 	private static void getLocationsFromFile(RoadMap g) {
 		try {
 			Scanner s = new Scanner(new File("src/location_database.txt"));
@@ -44,6 +46,8 @@ public class RoadMapStart {
 		
 	}
 
+	//This method takes in a file of all the roads and stores them in the roadmap. 
+	//It keeps track of the type of the road
 	private static void getRoadsFromFile(RoadMap g) {
 		try {
 			Scanner s2 = new Scanner(new File("src/road_database.txt"));
