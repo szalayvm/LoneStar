@@ -5,8 +5,13 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -36,9 +41,10 @@ public class MapVisualizer extends JPanel {
 	public Color blue = new Color(69, 126, 216);
 	public Border textborder = BorderFactory.createCompoundBorder();
 	public Border border = BorderFactory.createRaisedBevelBorder();
+	private BufferedImage star;
 
 	//This constructs the map, setting the size of the text feilds on the map, setting up the tabs, and calling other methods to set up other parts on the map
-	public MapVisualizer(RoadMap m) {
+ 	public MapVisualizer(RoadMap m) {
 		this.setLayout(null);
 		this.b = m;
 		this.cities = m.getAllCities();
@@ -86,7 +92,14 @@ public class MapVisualizer extends JPanel {
 		titleText.setLocation(1500 / 2 - 75, -h / 2 + 50);
 		titleText.setSize(w, h);
 		titleText.setFont(new Font("Freestyle Script", 1, 38));
-
+		
+		try {
+			File img = new File("LoneStarImage.png");
+			this.star = ImageIO.read(img);
+		} catch (IOException e) {
+			System.out.println("The image file doesn't exist! Was it deleted?");
+			e.printStackTrace();
+		}
 		this.add(titleText);
 	}
 
@@ -239,6 +252,9 @@ public class MapVisualizer extends JPanel {
 			}
 
 		}
+		
+		g.drawImage(star, (1500 / 2 - 75) - 75, 0, 75, 75, this);
+		g.drawImage(star, (1500 / 2 - 75) + 250, 0, 75, 75, this);
 
 		for (RoadMap.Edge e : edges) {
 			int x1 = 1300 - (int) (e.getFirstNode().getLongitude() * 100 - maxlong * 100) + this.radius / 2;
