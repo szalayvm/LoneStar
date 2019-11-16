@@ -15,6 +15,7 @@ import javax.swing.border.Border;
 
 public class GUIMain {
 
+	//This method makes the GUI
 	public static void constructGUI(RoadMap roadmap) {
 		int w = 800;
 		int h = 800;
@@ -56,9 +57,6 @@ public class GUIMain {
 
 		JButton SR = new JButton("Go!");
 		SR.addActionListener(new ButtonListener());
-		
-		
-		
 
 		TextFieldListener sL = new TextFieldListener(start);
 		TextFieldListener eL = new TextFieldListener(end);
@@ -106,20 +104,14 @@ public class GUIMain {
 		tab.addTab("Shortest Route", SRPanel);
 		tab.addTab("City Search", searcher);
 		
-		
-		
 		contentPane.add(map);
-//		contentPane.add(titleText);
-//		contentPane.add(tab);
+		contentPane.add(titleText);
+		contentPane.add(tab);
 		
-
 		frame.setContentPane(contentPane);
 		frame.setSize(w, h);
 		frame.setLocationByPlatform(true);
 		frame.setVisible(true);
-
-		
-
 	}
 }
 
