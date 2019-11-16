@@ -5,8 +5,13 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -36,9 +41,10 @@ public class MapVisualizer extends JPanel {
 	public Color blue = new Color(69, 126, 216);
 	public Border textborder = BorderFactory.createCompoundBorder();
 	public Border border = BorderFactory.createRaisedBevelBorder();
+	private BufferedImage star;
 
 	//This constructs the map, setting the size of the text feilds on the map, setting up the tabs, and calling other methods to set up other parts on the map
-	public MapVisualizer(RoadMap m) {
+ 	public MapVisualizer(RoadMap m) {
 		this.setLayout(null);
 		this.b = m;
 		this.cities = m.getAllCities();
@@ -86,7 +92,14 @@ public class MapVisualizer extends JPanel {
 		titleText.setLocation(1500 / 2 - 75, -h / 2 + 50);
 		titleText.setSize(w, h);
 		titleText.setFont(new Font("Freestyle Script", 1, 38));
-
+		
+		try {
+			File img = new File("LoneStarImage.png");
+			this.star = ImageIO.read(img);
+		} catch (IOException e) {
+			System.out.println("The image file doesn't exist! Was it deleted?");
+			e.printStackTrace();
+		}
 		this.add(titleText);
 	}
 
@@ -95,20 +108,26 @@ public class MapVisualizer extends JPanel {
 		GridLayout TPlayout = new GridLayout(4, 2);
 		
 
-		JLabel startlabel = this.makeLabel("Starting Location: ");
+		JLabel startlabel = new JLabel("Starting Location: ");
+		//JLabel startlabel = this.makeLabel("Starting Location: ");
 		startlabel.setOpaque(true);
 		startlabel.setBackground(new Color(67, 130, 231));
-		JTextField start = this.makeField("Enter Your Starting Location");
+		JTextField start = new JTextField("Enter Your Starting Location");
+		//JTextField start = this.makeField("Enter Your Starting Location");
 		start.setBackground(new Color(67, 130, 231));
-		JLabel timeLabel = this.makeLabel("Time (hours): ");
+		JLabel timeLabel = new JLabel("Time (hour): ");
+		//JLabel timeLabel = this.makeLabel("Time (hours): ");
 		timeLabel.setOpaque(true);
 		timeLabel.setBackground(new Color(52, 68, 238));
-		JTextField time = this.makeField("0");
+		JTextField time = new JTextField("0");
+		//JTextField time = this.makeField("0");
 		time.setBackground(new Color(114, 131, 218));
-		JLabel distanceLabel = this.makeLabel("Distance (miles): ");
+		JLabel distanceLabel = new JLabel("Distance (miles): ");
+		//JLabel distanceLabel = this.makeLabel("Distance (miles): ");
 		distanceLabel.setOpaque(true);
 		distanceLabel.setBackground(new Color(52, 68, 238));
-		JTextField distance = this.makeField("0");
+		JTextField distance = new JTextField("0");
+		//JTextField distance = this.makeField("0");
 		distance.setBackground(new Color(114, 131, 218));
 		JButton timeButton = new JButton("Calculate Based on Time");
 		JButton distanceButton = new JButton("Calculate Based on Distance");
@@ -162,6 +181,7 @@ public class MapVisualizer extends JPanel {
 
 	}
 
+	//This method makes the trip planner tab work
 	public void shortRoute() {
 		GridLayout SRlayout = new GridLayout(9, 0);
 
@@ -171,21 +191,27 @@ public class MapVisualizer extends JPanel {
 		SRPanel.setSize(200, 200);
 		SRPanel.setLayout(SRlayout);
 
-		JLabel startlabel = this.makeLabel("Starting Location: ");
+		JLabel startlabel = new JLabel ("Staring Location: ");
+		//JLabel startlabel = this.makeLabel("Starting Location: ");
 		startlabel.setOpaque(true);
 		startlabel.setBackground(blue);
-		JLabel endlabel = this.makeLabel("Ending Location:");
+		JLabel endlabel = new JLabel ("Ending Location: ");
+		//JLabel endlabel = this.makeLabel("Ending Location:");
 		endlabel.setOpaque(true);
 		endlabel.setBackground(red);
 
-		JLabel timelabel = this.makeLabel("Enter in the military time :");
+		JLabel timelabel = new JLabel("Enter in the military time: ");
+		//JLabel timelabel = this.makeLabel("Enter in the military time :");
 
-		JTextField start = this.makeField("Enter Your Starting Location");
+		JTextField start = new JTextField("Enter Your Starting Location");
+		//JTextField start = this.makeField("Enter Your Starting Location");
 		start.addActionListener(new TextFieldListener(start));
 		// start.setBackground(blue);
-		JTextField end = this.makeField("Enter Your Ending Location");
+		JTextField end = new JTextField("Enter Your Ending Location");
+		//JTextField end = this.makeField("Enter Your Ending Location");
 		end.setBackground(blue);
-		JTextField time = this.makeField("Enter in the Time of Day");
+		JTextField time = new JTextField("Enter in the Time of Day");
+		//JTextField time = this.makeField("Enter in the Time of Day");
 		time.setBackground(red);
 		
 
@@ -221,12 +247,13 @@ public class MapVisualizer extends JPanel {
 
 	}
 
+	//This method makes everything appear on the gui
 	@Override
 	public void paintComponent(Graphics g) {// Bottom right is Galv
 
 		super.paintComponent(g);
 		this.setBackground(Color.WHITE);
-		int d = 30;
+		//int d = 30;
 		double minlat = this.cities.get(0).getLatitude();
 		double maxlong = this.cities.get(0).getLongitude();
 
@@ -239,26 +266,27 @@ public class MapVisualizer extends JPanel {
 			}
 
 		}
+		
+		//The next two lines draw stars next to the title
+		g.drawImage(star, (1500 / 2 - 75) - 75, 0, 75, 75, this);
+		g.drawImage(star, (1500 / 2 - 75) + 250, 0, 75, 75, this);
 
+		//This for loop draws all of the edges on screen
 		for (RoadMap.Edge e : edges) {
 			int x1 = 1300 - (int) (e.getFirstNode().getLongitude() * 100 - maxlong * 100) + this.radius / 2;
 			int y1 = 600 + (int) (minlat * 30 - e.getFirstNode().getLatitude() * 30) + this.radius / 2;
-
 			int x2 = 1300 - (int) (e.getSecondNode().getLongitude() * 100 - maxlong * 100) + this.radius / 2;
 			int y2 = 600 + (int) (minlat * 30 - e.getSecondNode().getLatitude() * 30) + this.radius / 2;
 			g.drawLine(x1, y1, x2, y2);
-
 		}
 
+		//This for loop draws all of the cities on screen
 		for (RoadMap.Node n : cities) {
 			ArrayList<RoadMap.Edge> edges = n.getConnectedRoads();
 			g.setColor(n.getColor());
-
 			int x = 1300 - (int) (n.getLongitude() * 100 - maxlong * 100);
 			int y = 600 + (int) (minlat * 30 - n.getLatitude() * 30);
-
 			g.fillOval(x, y, radius, radius);
-
 			g.setFont(new Font("Times New Roman", Font.BOLD, 15));
 			g.setColor(Color.BLUE);
 			if (n.getName().equals("Fort Worth")) {
@@ -266,16 +294,15 @@ public class MapVisualizer extends JPanel {
 			} else {
 				g.drawString(n.getName(), x, y);
 			}
-
 		}
-
+		//This section of code sets the fonts
 		Font f = new Font("Times New Roman", 1, 18);
-
 		this.oArea.setFont(f);
 		this.tpArea.setFont(f);
 		this.tArea.setFont(f);
 		this.sdArea.setFont(f);
 
+		//The following code writes the solutions in the correct text field
 		if (tpR.size() > 5) {
 			this.tpArea.setText("Possible Paths: \n" + tpR.subList(0, 5).toString());
 		} else
@@ -296,8 +323,8 @@ public class MapVisualizer extends JPanel {
 			this.sdArea.setText("Distance: \n" + 0.0 + " miles");
 
 		}
+		//reset the variables, ready for next change
 		TP = false;
-
 		setNodeBlack();
 		setTPBlack();
 		result.clear();
@@ -305,16 +332,17 @@ public class MapVisualizer extends JPanel {
 
 	}
 
-	public JLabel makeLabel(String s) {
+//	public JLabel makeLabel(String s) {
+//
+//		return new JLabel(s);
+//
+//	}
+//
+//	public JTextField makeField(String s) {
+//		return new JTextField(s);
+//	}
 
-		return new JLabel(s);
-
-	}
-
-	public JTextField makeField(String s) {
-		return new JTextField(s);
-	}
-
+	//This following four methods can set the colors of the nodes
 	public void changeNodeColor() {
 		if (!result.isEmpty()) {
 			for (RoadMap.Node n : result) {
@@ -330,7 +358,6 @@ public class MapVisualizer extends JPanel {
 
 	}
 
-	//This following two methods can set the colors of the nodes
 	public void setTPRed() {
 		if (!tpR.isEmpty()) {
 			for (ArrayList<RoadMap.Node> a : tpR) {
