@@ -161,12 +161,15 @@ public class MapVisualizer extends JPanel {
 	//It sets up two text fields, one for the input and one for the output
 	//It also calls the methods to give the text fields functionality
 	private void searcher() {
+		Font f = new Font("Times New Roman", 1, 18);
 		GridLayout searchG = new GridLayout(2, 0);
 		JTextField searcher = new JTextField("Enter in a character and see which location you want!");
+		searcher.setFont(f);
 		searcher.setBackground(blue);
 
 		JPanel searchP = new JPanel();
 		JTextArea output = new JTextArea("Possible Locations: ");
+		output.setFont(f);
 		output.setLineWrap(true);
 		output.setWrapStyleWord(true);
 		output.setBackground(red);
