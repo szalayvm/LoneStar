@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -208,7 +207,7 @@ public class MapVisualizer extends JPanel {
 
 		JTextField start = new JTextField("Enter Your Starting Location");
 		//JTextField start = this.makeField("Enter Your Starting Location");
-		start.addActionListener(new TextFieldListener(start));
+//		start.addActionListener(new TextFieldListener(start));
 		// start.setBackground(blue);
 		JTextField end = new JTextField("Enter Your Ending Location");
 		//JTextField end = this.makeField("Enter Your Ending Location");
