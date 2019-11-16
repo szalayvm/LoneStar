@@ -94,7 +94,7 @@ public class MapVisualizer extends JPanel {
 		titleText.setFont(new Font("Freestyle Script", 1, 38));
 		
 		try {
-			File img = new File("LoneStarImage.png");
+			File img = new File("src/LoneStarImage.png");
 			this.star = ImageIO.read(img);
 		} catch (IOException e) {
 			System.out.println("The image file doesn't exist! Was it deleted?");
